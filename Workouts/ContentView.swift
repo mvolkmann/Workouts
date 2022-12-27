@@ -2,14 +2,41 @@ import SwiftUI
 
 struct ContentView: View {
     enum Field {
-        case cyclingMiles
+        case caloriesBurned, cyclingMiles
     }
 
     @FocusState private var focusedField: Field?
+    @State private var caloriesBurned = "850" // default for one hour
     @State private var cyclingMiles = ""
+    @State private var isShowingAlert = false
+    @State private var message = ""
     @StateObject private var viewModel = HealthKitViewModel()
 
-    func labelledValue(_ label: String, _ value: Double) -> some View {
+    private func addWorkout() {
+        Task {
+            do {
+                // HealthKit seems to round down to the nearest tenth.
+                // For example, 20.39 becomes 20.3.
+                // Adding 0.05 causes it to round to the nearest tenth.
+                let distance = (cyclingMiles as NSString).doubleValue + 0.05
+                print("distance =", distance)
+                let calories = (caloriesBurned as NSString).doubleValue
+                try await HealthKitManager().addCyclingWorkout(
+                    distance: distance,
+                    calories: calories
+                )
+                cyclingMiles = ""
+                focusedField = nil
+                message = "A cycling workout was added."
+                isShowingAlert = true
+            } catch {
+                message = "Error adding workout: \(error)"
+                isShowingAlert = true
+            }
+        }
+    }
+
+    private func labelledValue(_ label: String, _ value: Double) -> some View {
         Text("\(label): \(String(format: "%.0f", value))")
     }
 
@@ -28,17 +55,28 @@ struct ContentView: View {
             Text("Cycling Workout")
                 .font(.title)
                 .padding(.top)
-            HStack {
-                TextField("Miles", text: $cyclingMiles)
+            VStack {
+                TextField("Cycling Miles", text: $cyclingMiles)
                     .focused($focusedField, equals: .cyclingMiles)
                     .numbersOnly($cyclingMiles, float: true)
                     .textFieldStyle(.roundedBorder)
+                TextField("Calories Burned", text: $caloriesBurned)
+                    .focused($focusedField, equals: .caloriesBurned)
+                    .numbersOnly($caloriesBurned)
+                    .textFieldStyle(.roundedBorder)
                 Button("Add") {
-                    HealthKitManager().addKeiserWorkout(distance: 20)
+                    addWorkout()
                 }
                 .buttonStyle(.borderedProminent)
             }
         }
+        .alert(
+            "Success",
+            isPresented: $isShowingAlert,
+            actions: {},
+            message: { Text(message) }
+        )
+
         .toolbar {
             ToolbarItem(placement: .keyboard) {
                 Button {

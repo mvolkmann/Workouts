@@ -59,14 +59,14 @@
 		1AAD5DFE295B503C00D40C2A /* Workouts */ = {
 			isa = PBXGroup;
 			children = (
-				1AAD5E14295B581400D40C2A /* Info.plist */,
-				1AAD5E0D295B51E900D40C2A /* Workouts.entitlements */,
 				1AAD5DFF295B503C00D40C2A /* WorkoutsApp.swift */,
 				1AAD5E01295B503C00D40C2A /* ContentView.swift */,
 				1AAD5E0E295B51FD00D40C2A /* HealthKitViewModel.swift */,
 				1AAD5E10295B521B00D40C2A /* HealthKitManager.swift */,
 				1AAD5E12295B54F300D40C2A /* NumbersOnlyViewModifier.swift */,
 				1AAD5E03295B503D00D40C2A /* Assets.xcassets */,
+				1AAD5E14295B581400D40C2A /* Info.plist */,
+				1AAD5E0D295B51E900D40C2A /* Workouts.entitlements */,
 				1AAD5E05295B503D00D40C2A /* Preview Content */,
 			);
 			path = Workouts;

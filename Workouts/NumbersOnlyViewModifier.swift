@@ -8,14 +8,16 @@ struct NumbersOnlyViewModifier: ViewModifier {
     var float: Bool
 
     func body(content: Content) -> some View {
-        var allowed = "0123456789"
+        let decimalSeparator = Locale.current.decimalSeparator ?? "."
+        let allowed = "0123456789" + (float ? decimalSeparator : "")
+
         content
+            // Using a keyboardType of .decimalPad or .numberPad is not enough
+            // to prevent other keys from being pressed because those keyboards
+            // contain more keys when running on an iPad.
             .keyboardType(float ? .decimalPad : .numberPad)
             .onReceive(Just(text)) { newValue in
-                let decimalSeparator = Locale.current.decimalSeparator ?? "."
-                if float { allowed += decimalSeparator }
-                // If we already have a decimal separator, don't allow another.
-                if newValue.contains(decimalSeparator) {
+                if newValue.count(of: decimalSeparator) > 1 {
                     let filtered = newValue
                     self.text = String(filtered.dropLast())
                 } else {
@@ -27,6 +29,13 @@ struct NumbersOnlyViewModifier: ViewModifier {
                     }
                 }
             }
+    }
+}
+
+extension String {
+    func count(of string: String) -> Int {
+        let char = string.first!
+        return reduce(0) { $1 == char ? $0 + 1 : $0 }
     }
 }
 

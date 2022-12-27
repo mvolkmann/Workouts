@@ -3,7 +3,7 @@ import HealthKit
 class HealthKitManager: ObservableObject {
     private let store = HKHealthStore()
 
-    func addKeiserWorkout(distance: Double) {
+    func addCyclingWorkout(distance: Double, calories: Double) async throws {
         let endDate = Date.now
         let startDate = Calendar.current.date(
             byAdding: DateComponents(hour: -1),
@@ -17,19 +17,12 @@ class HealthKitManager: ObservableObject {
             duration: 0, // compute from start and end data
             totalEnergyBurned: HKQuantity(
                 unit: .kilocalorie(),
-                doubleValue: 851.0
+                doubleValue: calories
             ),
             totalDistance: HKQuantity(unit: .mile(), doubleValue: distance),
             metadata: nil
         )
-        Task {
-            do {
-                try await store.save(workout)
-                print("added workout")
-            } catch {
-                print("error adding workout: \(error)")
-            }
-        }
+        try await store.save(workout)
     }
 
     func authorize(identifiers: [HKQuantityTypeIdentifier]) async throws {
