@@ -65,6 +65,22 @@ struct ContentView: View {
         }
     }
 
+    // TODO: Improve this before you start using it!
+    private func computedCalories() -> Int {
+        let calendar = Calendar.current
+        let minutes = calendar.dateComponents(
+            [.minute],
+            from: startTime,
+            to: endTime
+        ).minute!
+        print("minutes =", minutes)
+
+        let weight = 75.0 // kilograms
+        let met = 11.0 // metabolic equivalent
+        let caloriesPerMinute = met * weight * 3.5 / 200.0
+        return Int(caloriesPerMinute * Double(minutes))
+    }
+
     private var cyclingWorkout: some View {
         Form {
             Text("Cycling Workout")
@@ -91,6 +107,11 @@ struct ContentView: View {
             }
             HStack {
                 Text("Calories Burned")
+                /*
+                 Button("Compute") {
+                     caloriesBurned = String(computedCalories())
+                 }
+                 */
                 Spacer()
                 TextField("", text: $caloriesBurned)
                     .focused($focusedField, equals: .caloriesBurned)
