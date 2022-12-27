@@ -1,4 +1,4 @@
-import Combine
+import Combine // for onReceive method
 import SwiftUI
 
 // See the Stewart Lynch video at
@@ -17,12 +17,20 @@ struct NumbersOnlyViewModifier: ViewModifier {
             // contain more keys when running on an iPad.
             .keyboardType(float ? .decimalPad : .numberPad)
             .onReceive(Just(text)) { newValue in
+                // If there are multiple decimal separators ...
                 if newValue.count(of: decimalSeparator) > 1 {
-                    let filtered = newValue
-                    self.text = String(filtered.dropLast())
+                    // Remove the last decimal separator.
+                    let character = decimalSeparator.first!
+                    let index = newValue.lastIndex(of: character)
+                    if let index {
+                        var filtered = newValue // makes a copy
+                        filtered.remove(at: index)
+                        self.text = filtered
+                    }
                 } else {
-                    // Only keep allowed characters.
-                    // TODO: Can we only check the last character?
+                    // Remove all characters that are not allowed.
+                    // We can't just check the last character
+                    // because the user can insert characters anywhere.
                     let filtered = newValue.filter { allowed.contains($0) }
                     if filtered != newValue {
                         self.text = filtered
