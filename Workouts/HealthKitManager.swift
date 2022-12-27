@@ -3,17 +3,16 @@ import HealthKit
 class HealthKitManager: ObservableObject {
     private let store = HKHealthStore()
 
-    func addCyclingWorkout(distance: Double, calories: Double) async throws {
-        let endDate = Date.now
-        let startDate = Calendar.current.date(
-            byAdding: DateComponents(hour: -1),
-            to: endDate,
-            wrappingComponents: false
-        )!
+    func addCyclingWorkout(
+        startTime: Date,
+        endTime: Date,
+        distance: Double,
+        calories: Double
+    ) async throws {
         let workout = HKWorkout(
             activityType: HKWorkoutActivityType.cycling,
-            start: startDate,
-            end: endDate,
+            start: startTime,
+            end: endTime,
             duration: 0, // compute from start and end data
             totalEnergyBurned: HKQuantity(
                 unit: .kilocalorie(),

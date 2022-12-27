@@ -7,10 +7,21 @@ struct ContentView: View {
 
     @FocusState private var focusedField: Field?
     @State private var caloriesBurned = "850" // default for one hour
-    @State private var cyclingMiles = ""
+    @State private var cyclingMiles = "20.0"
+    @State private var endTime = Date()
+    @State private var startTime = Date()
     @State private var isShowingAlert = false
     @State private var message = ""
     @StateObject private var viewModel = HealthKitViewModel()
+
+    init() {
+        let oneHourBefore = Calendar.current.date(
+            byAdding: .hour,
+            value: -1,
+            to: endTime
+        )!
+        _startTime = State(initialValue: oneHourBefore)
+    }
 
     private func addWorkout() {
         Task {
@@ -22,6 +33,8 @@ struct ContentView: View {
                 print("distance =", distance)
                 let calories = (caloriesBurned as NSString).doubleValue
                 try await HealthKitManager().addCyclingWorkout(
+                    startTime: startTime,
+                    endTime: endTime,
                     distance: distance,
                     calories: calories
                 )
@@ -36,17 +49,47 @@ struct ContentView: View {
         }
     }
 
-    private func labelledValue(_ label: String, _ value: Double) -> some View {
-        HStack {
-            Text("\(label):")
-            Spacer()
-            Text(String(format: "%.0f", value))
-                .fontWeight(.bold)
+    private var cyclingWorkout: some View {
+        Form {
+            Text("Cycling Workout")
+                .font(.title)
+                .padding(.top)
+            DatePicker(
+                "Start Time",
+                selection: $startTime,
+                displayedComponents: .hourAndMinute
+            )
+            DatePicker(
+                "End Time",
+                selection: $endTime,
+                displayedComponents: .hourAndMinute
+            )
+            HStack {
+                Text("Cycling Miles")
+                Spacer()
+                TextField("", text: $cyclingMiles)
+                    .focused($focusedField, equals: .cyclingMiles)
+                    .numbersOnly($cyclingMiles, float: true)
+                    .textFieldStyle(.roundedBorder)
+                    .frame(maxWidth: 90)
+            }
+            HStack {
+                Text("Calories Burned")
+                Spacer()
+                TextField("", text: $caloriesBurned)
+                    .focused($focusedField, equals: .caloriesBurned)
+                    .numbersOnly($caloriesBurned)
+                    .textFieldStyle(.roundedBorder)
+                    .frame(maxWidth: 90)
+            }
+            Button("Add") {
+                addWorkout()
+            }
+            .buttonStyle(.borderedProminent)
         }
-        .frame(maxWidth: 270)
     }
 
-    var body: some View {
+    private var healthStatistics: some View {
         VStack {
             Text("Health Statistics\nfor the Past 7 Days")
                 .font(.title)
@@ -64,26 +107,26 @@ struct ContentView: View {
                     viewModel.activeEnergyBurned
                 )
             }
+        }
+    }
+
+    private func labelledValue(_ label: String, _ value: Double) -> some View {
+        HStack {
+            Text("\(label):")
+            Spacer()
+            Text(String(format: "%.0f", value))
+                .fontWeight(.bold)
+        }
+        .frame(maxWidth: 270)
+    }
+
+    var body: some View {
+        VStack {
+            healthStatistics
 
             Spacer()
 
-            VStack {
-                Text("Cycling Workout")
-                    .font(.title)
-                    .padding(.top)
-                TextField("Cycling Miles", text: $cyclingMiles)
-                    .focused($focusedField, equals: .cyclingMiles)
-                    .numbersOnly($cyclingMiles, float: true)
-                    .textFieldStyle(.roundedBorder)
-                TextField("Calories Burned", text: $caloriesBurned)
-                    .focused($focusedField, equals: .caloriesBurned)
-                    .numbersOnly($caloriesBurned)
-                    .textFieldStyle(.roundedBorder)
-                Button("Add") {
-                    addWorkout()
-                }
-                .buttonStyle(.borderedProminent)
-            }
+            cyclingWorkout
         }
         .padding()
         .alert(
