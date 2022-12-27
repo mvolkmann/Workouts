@@ -9,6 +9,8 @@ class HealthKitManager: ObservableObject {
         distance: Double,
         calories: Double
     ) async throws {
+        print("startTime =", startTime)
+        print("endTime =", endTime)
         let workout = HKWorkout(
             activityType: HKWorkoutActivityType.cycling,
             start: startTime,

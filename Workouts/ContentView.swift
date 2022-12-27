@@ -6,16 +6,29 @@ struct ContentView: View {
     }
 
     @FocusState private var focusedField: Field?
+
     @State private var caloriesBurned = "850" // default for one hour
     @State private var cyclingMiles = "20.0"
-    @State private var endTime = Date()
-    @State private var startTime = Date()
+    @State private var endTime = Date() // adjusted in init
     @State private var isShowingAlert = false
     @State private var message = ""
+    @State private var startTime = Date() // adjusted in init
+
     @StateObject private var viewModel = HealthKitViewModel()
 
     init() {
-        let oneHourBefore = Calendar.current.date(
+        // Remove seconds from the end time.
+        let calendar = Calendar.current
+        let endSeconds = calendar.component(.second, from: endTime)
+        let secondsCleared = calendar.date(
+            byAdding: .second,
+            value: -endSeconds,
+            to: endTime
+        )!
+        _endTime = State(initialValue: secondsCleared)
+
+        // Set start time to one hour before the end time.
+        let oneHourBefore = calendar.date(
             byAdding: .hour,
             value: -1,
             to: endTime
@@ -30,7 +43,6 @@ struct ContentView: View {
                 // For example, 20.39 becomes 20.3.
                 // Adding 0.05 causes it to round to the nearest tenth.
                 let distance = (cyclingMiles as NSString).doubleValue + 0.05
-                print("distance =", distance)
                 let calories = (caloriesBurned as NSString).doubleValue
                 try await HealthKitManager().addCyclingWorkout(
                     startTime: startTime,
@@ -123,9 +135,6 @@ struct ContentView: View {
     var body: some View {
         VStack {
             healthStatistics
-
-            Spacer()
-
             cyclingWorkout
         }
         .padding()
@@ -135,6 +144,8 @@ struct ContentView: View {
             actions: {},
             message: { Text(message) }
         )
+        // This enables dismissing the keyboard which is
+        // displayed when a TextField has focus.
         .toolbar {
             ToolbarItem(placement: .keyboard) {
                 Button {
