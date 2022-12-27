@@ -5,10 +5,13 @@ struct ContentView: View {
         case caloriesBurned, cyclingMiles
     }
 
+    static let defaultCyclingMiles = "20.0"
+    static let defaultCaloriesBurned = "850" // for one hour
+
     @FocusState private var focusedField: Field?
 
-    @State private var caloriesBurned = "850" // default for one hour
-    @State private var cyclingMiles = "20.0"
+    @State private var caloriesBurned = Self.defaultCaloriesBurned
+    @State private var cyclingMiles = Self.defaultCyclingMiles
     @State private var endTime = Date() // adjusted in init
     @State private var isShowingAlert = false
     @State private var message = ""
@@ -43,14 +46,15 @@ struct ContentView: View {
                 // For example, 20.39 becomes 20.3.
                 // Adding 0.05 causes it to round to the nearest tenth.
                 let distance = (cyclingMiles as NSString).doubleValue + 0.05
-                let calories = (caloriesBurned as NSString).doubleValue
+                let calories = (caloriesBurned as NSString).intValue
                 try await HealthKitManager().addCyclingWorkout(
                     startTime: startTime,
                     endTime: endTime,
                     distance: distance,
-                    calories: calories
+                    calories: Int(calories)
                 )
-                cyclingMiles = ""
+                cyclingMiles = Self.defaultCyclingMiles
+                caloriesBurned = Self.defaultCaloriesBurned
                 focusedField = nil
                 message = "A cycling workout was added."
                 isShowingAlert = true
