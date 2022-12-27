@@ -1,6 +1,12 @@
 import SwiftUI
 
 struct ContentView: View {
+    enum Field {
+        case cyclingMiles
+    }
+
+    @FocusState private var focusedField: Field?
+    @State private var cyclingMiles = ""
     @StateObject private var viewModel = HealthKitViewModel()
 
     func labelledValue(_ label: String, _ value: Double) -> some View {
@@ -19,10 +25,28 @@ struct ContentView: View {
             labelledValue("Total Steps", viewModel.steps)
             labelledValue("Total Calories Burned", viewModel.activeEnergyBurned)
 
-            Button("Add Keiser Workout") {
-                HealthKitManager().addKeiserWorkout(distance: 20)
+            Text("Cycling Workout")
+                .font(.title)
+                .padding(.top)
+            HStack {
+                TextField("Miles", text: $cyclingMiles)
+                    .focused($focusedField, equals: .cyclingMiles)
+                    .numbersOnly($cyclingMiles, float: true)
+                    .textFieldStyle(.roundedBorder)
+                Button("Add") {
+                    HealthKitManager().addKeiserWorkout(distance: 20)
+                }
+                .buttonStyle(.borderedProminent)
             }
-            .buttonStyle(.borderedProminent)
+        }
+        .toolbar {
+            ToolbarItem(placement: .keyboard) {
+                Button {
+                    focusedField = nil
+                } label: {
+                    Image(systemName: "keyboard.chevron.compact.down")
+                }
+            }
         }
     }
 }

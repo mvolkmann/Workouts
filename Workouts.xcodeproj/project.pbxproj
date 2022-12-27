@@ -13,6 +13,7 @@
 		1AAD5E07295B503D00D40C2A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1AAD5E06295B503D00D40C2A /* Preview Assets.xcassets */; };
 		1AAD5E0F295B51FD00D40C2A /* HealthKitViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD5E0E295B51FD00D40C2A /* HealthKitViewModel.swift */; };
 		1AAD5E11295B521B00D40C2A /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD5E10295B521B00D40C2A /* HealthKitManager.swift */; };
+		1AAD5E13295B54F300D40C2A /* NumbersOnlyViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD5E12295B54F300D40C2A /* NumbersOnlyViewModifier.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,8 @@
 		1AAD5E0D295B51E900D40C2A /* Workouts.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Workouts.entitlements; sourceTree = "<group>"; };
 		1AAD5E0E295B51FD00D40C2A /* HealthKitViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitViewModel.swift; sourceTree = "<group>"; };
 		1AAD5E10295B521B00D40C2A /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
+		1AAD5E12295B54F300D40C2A /* NumbersOnlyViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumbersOnlyViewModifier.swift; sourceTree = "<group>"; };
+		1AAD5E14295B581400D40C2A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,11 +59,13 @@
 		1AAD5DFE295B503C00D40C2A /* Workouts */ = {
 			isa = PBXGroup;
 			children = (
+				1AAD5E14295B581400D40C2A /* Info.plist */,
 				1AAD5E0D295B51E900D40C2A /* Workouts.entitlements */,
 				1AAD5DFF295B503C00D40C2A /* WorkoutsApp.swift */,
 				1AAD5E01295B503C00D40C2A /* ContentView.swift */,
 				1AAD5E0E295B51FD00D40C2A /* HealthKitViewModel.swift */,
 				1AAD5E10295B521B00D40C2A /* HealthKitManager.swift */,
+				1AAD5E12295B54F300D40C2A /* NumbersOnlyViewModifier.swift */,
 				1AAD5E03295B503D00D40C2A /* Assets.xcassets */,
 				1AAD5E05295B503D00D40C2A /* Preview Content */,
 			);
@@ -145,6 +150,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1AAD5E13295B54F300D40C2A /* NumbersOnlyViewModifier.swift in Sources */,
 				1AAD5E0F295B51FD00D40C2A /* HealthKitViewModel.swift in Sources */,
 				1AAD5E02295B503C00D40C2A /* ContentView.swift in Sources */,
 				1AAD5E11295B521B00D40C2A /* HealthKitManager.swift in Sources */,
@@ -281,9 +287,9 @@
 				DEVELOPMENT_TEAM = 4BG3523GAZ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Workouts/Info.plist;
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "To read health data";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "To write workout data";
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -313,9 +319,9 @@
 				DEVELOPMENT_TEAM = 4BG3523GAZ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Workouts/Info.plist;
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "To read health data";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "To write workout data";
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
