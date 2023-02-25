@@ -14,8 +14,11 @@ class HealthKitManager: ObservableObject {
             start: startTime,
             end: endTime,
             duration: 0, // compute from start and end data
+            // TODO: MOVE calories not updating in activity ring!
+            // See https://forums.swift.org/t/healthkit-hkworkout-totalenergyburn/63359.
             totalEnergyBurned: HKQuantity(
-                unit: .kilocalorie(),
+                // unit: .kilocalorie(),
+                unit: .largeCalorie(),
                 doubleValue: Double(calories)
             ),
             totalDistance: HKQuantity(unit: .mile(), doubleValue: distance),

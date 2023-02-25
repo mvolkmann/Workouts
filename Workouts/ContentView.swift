@@ -47,12 +47,15 @@ struct ContentView: View {
                 // Adding 0.05 causes it to round to the nearest tenth.
                 let distance = (cyclingMiles as NSString).doubleValue + 0.05
                 let calories = (caloriesBurned as NSString).intValue
+                print("calories =", calories)
                 try await HealthKitManager().addCyclingWorkout(
                     startTime: startTime,
                     endTime: endTime,
                     distance: distance,
                     calories: Int(calories)
                 )
+
+                // Reset the UI.
                 cyclingMiles = Self.defaultCyclingMiles
                 caloriesBurned = Self.defaultCaloriesBurned
                 focusedField = nil
@@ -169,6 +172,9 @@ struct ContentView: View {
             actions: {},
             message: { Text(message) }
         )
+        .onAppear {
+            UITextField.appearance().clearButtonMode = .whileEditing
+        }
         // This enables dismissing the keyboard which is
         // displayed when a TextField has focus.
         .toolbar {
