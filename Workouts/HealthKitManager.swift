@@ -9,22 +9,44 @@ class HealthKitManager: ObservableObject {
         distance: Double,
         calories: Int
     ) async throws {
+        let energyBurned = HKQuantity(
+            // unit: .kilocalorie(),
+            unit: .largeCalorie(),
+            doubleValue: Double(calories)
+        )
         let workout = HKWorkout(
             activityType: HKWorkoutActivityType.cycling,
             start: startTime,
             end: endTime,
             duration: 0, // compute from start and end data
-            // TODO: MOVE calories not updating in activity ring!
-            // See https://forums.swift.org/t/healthkit-hkworkout-totalenergyburn/63359.
-            totalEnergyBurned: HKQuantity(
-                // unit: .kilocalorie(),
-                unit: .largeCalorie(),
-                doubleValue: Double(calories)
-            ),
+            // See https://forums.swift.org/t/healthkit-hkworkout-totalenergyburn/63359
+            // and https://developer.apple.com/forums/thread/725572.
+            totalEnergyBurned: energyBurned,
             totalDistance: HKQuantity(unit: .mile(), doubleValue: distance),
             metadata: nil
         )
         try await store.save(workout)
+
+        let energyBurnedType = HKObjectType.quantityType(
+            forIdentifier: HKQuantityTypeIdentifier.activeEnergyBurned
+        )!
+        let sample = HKQuantitySample(
+            type: energyBurnedType,
+            quantity: energyBurned,
+            start: startTime,
+            end: endTime
+        )
+
+        // Says "Missing argument for parameter 'completion' in call".
+        // await store.add([sample], to: workout)
+
+        // Says "Consider using asynchronous alternative version",
+        // but I tried that above and it doesn't work!
+        store.add([sample], to: workout) { _, error in
+            if let error {
+                print("error adding sample:", error)
+            }
+        }
     }
 
     func authorize(identifiers: [HKQuantityTypeIdentifier]) async throws {
@@ -32,6 +54,9 @@ class HealthKitManager: ObservableObject {
             identifiers.map { .quantityType(forIdentifier: $0)! }
         )
         let writeSet: Set<HKSampleType> = [
+            .quantityType(
+                forIdentifier: HKQuantityTypeIdentifier.activeEnergyBurned
+            )!,
             .quantityType(
                 forIdentifier: HKQuantityTypeIdentifier.distanceCycling
             )!,
