@@ -1,189 +1,78 @@
 import SwiftUI
 
 struct ContentView: View {
-    enum Field {
-        case caloriesBurned, cyclingMiles
-    }
-
-    static let defaultCyclingMiles = "20.0"
-    static let defaultCaloriesBurned = "850" // for one hour
-
-    @FocusState private var focusedField: Field?
-
-    @State private var caloriesBurned = Self.defaultCaloriesBurned
-    @State private var cyclingMiles = Self.defaultCyclingMiles
-    @State private var endTime = Date() // adjusted in init
-    @State private var isShowingAlert = false
-    @State private var message = ""
-    @State private var startTime = Date() // adjusted in init
-
+    @State private var appInfo: AppInfo?
+    @State private var isInfoPresented = false
+    @State private var isSettingsPresented = false
     @StateObject private var viewModel = HealthKitViewModel()
 
     init() {
-        // Remove seconds from the end time.
-        let calendar = Calendar.current
-        let endSeconds = calendar.component(.second, from: endTime)
-        let secondsCleared = calendar.date(
-            byAdding: .second,
-            value: -endSeconds,
-            to: endTime
-        )!
-        _endTime = State(initialValue: secondsCleared)
-
-        // Set start time to one hour before the end time.
-        let oneHourBefore = calendar.date(
-            byAdding: .hour,
-            value: -1,
-            to: endTime
-        )!
-        _startTime = State(initialValue: oneHourBefore)
+        customizeNavBar()
     }
 
-    private func addWorkout() {
-        Task {
-            do {
-                // HealthKit seems to round down to the nearest tenth.
-                // For example, 20.39 becomes 20.3.
-                // Adding 0.05 causes it to round to the nearest tenth.
-                let distance = (cyclingMiles as NSString).doubleValue + 0.05
-                let calories = (caloriesBurned as NSString).intValue
-                print("calories =", calories)
-                try await HealthKitManager().addCyclingWorkout(
-                    startTime: startTime,
-                    endTime: endTime,
-                    distance: distance,
-                    calories: Int(calories)
-                )
-
-                // Reset the UI.
-                cyclingMiles = Self.defaultCyclingMiles
-                caloriesBurned = Self.defaultCaloriesBurned
-                focusedField = nil
-                message = "A cycling workout was added."
-                isShowingAlert = true
-            } catch {
-                message = "Error adding workout: \(error)"
-                isShowingAlert = true
-            }
-        }
-    }
-
-    // TODO: Improve this before you start using it!
-    private func computedCalories() -> Int {
-        let calendar = Calendar.current
-        let minutes = calendar.dateComponents(
-            [.minute],
-            from: startTime,
-            to: endTime
-        ).minute!
-        print("minutes =", minutes)
-
-        let weight = 75.0 // kilograms
-        let met = 11.0 // metabolic equivalent
-        let caloriesPerMinute = met * weight * 3.5 / 200.0
-        return Int(caloriesPerMinute * Double(minutes))
-    }
-
-    private var cyclingWorkout: some View {
-        Form {
-            Text("Cycling Workout")
-                .font(.title)
-                .padding(.top)
-            DatePicker(
-                "Start Time",
-                selection: $startTime,
-                displayedComponents: .hourAndMinute
-            )
-            DatePicker(
-                "End Time",
-                selection: $endTime,
-                displayedComponents: .hourAndMinute
-            )
-            HStack {
-                Text("Cycling Miles")
-                Spacer()
-                TextField("", text: $cyclingMiles)
-                    .focused($focusedField, equals: .cyclingMiles)
-                    .numbersOnly($cyclingMiles, float: true)
-                    .textFieldStyle(.roundedBorder)
-                    .frame(maxWidth: 90)
-            }
-            HStack {
-                Text("Calories Burned")
-                /*
-                 Button("Compute") {
-                     caloriesBurned = String(computedCalories())
-                 }
-                 */
-                Spacer()
-                TextField("", text: $caloriesBurned)
-                    .focused($focusedField, equals: .caloriesBurned)
-                    .numbersOnly($caloriesBurned)
-                    .textFieldStyle(.roundedBorder)
-                    .frame(maxWidth: 90)
-            }
-            Button("Add") {
-                addWorkout()
-            }
-            .buttonStyle(.borderedProminent)
-        }
-    }
-
-    private var healthStatistics: some View {
-        VStack {
-            Text("Health Statistics\nfor the Past 7 Days")
-                .font(.title)
-                .multilineTextAlignment(.center)
-                .padding(.bottom)
-            VStack(alignment: .leading) {
-                labelledValue("Average Heart Rate", viewModel.heartRate)
-                labelledValue(
-                    "Average Resting Heart Rate",
-                    viewModel.restingHeartRate
-                )
-                labelledValue("Total Steps", viewModel.steps)
-                labelledValue(
-                    "Total Calories Burned",
-                    viewModel.activeEnergyBurned
-                )
-            }
-        }
-    }
-
-    private func labelledValue(_ label: String, _ value: Double) -> some View {
-        HStack {
-            Text("\(label):")
-            Spacer()
-            Text(String(format: "%.0f", value))
-                .fontWeight(.bold)
-        }
-        .frame(maxWidth: 270)
+    private func customizeNavBar() {
+        let navigationAppearance = UINavigationBarAppearance()
+        navigationAppearance.titleTextAttributes = [
+            .foregroundColor: UIColor.systemBlue,
+            // When the font size is 30 or more, this causes the error
+            // "[LayoutConstraints] Unable to simultaneously
+            // satisfy constraints", but it still works.
+            .font: UIFont.systemFont(ofSize: 24, weight: .bold)
+        ]
+        UINavigationBar.appearance().standardAppearance = navigationAppearance
     }
 
     var body: some View {
-        VStack {
-            healthStatistics
-            cyclingWorkout
-        }
-        .padding()
-        .alert(
-            "Success",
-            isPresented: $isShowingAlert,
-            actions: {},
-            message: { Text(message) }
-        )
-        .onAppear {
-            UITextField.appearance().clearButtonMode = .whileEditing
-        }
-        // This enables dismissing the keyboard which is
-        // displayed when a TextField has focus.
-        .toolbar {
-            ToolbarItem(placement: .keyboard) {
-                Button {
-                    focusedField = nil
-                } label: {
-                    Image(systemName: "keyboard.chevron.compact.down")
+        NavigationStack {
+            TabView {
+                Workout()
+                    .tabItem {
+                        Label("Workout", systemImage: "figure.indoor.cycle")
+                    }
+                Statistics()
+                    .tabItem {
+                        Label(
+                            "Statistics",
+                            systemImage: "chart.xyaxis.line"
+                        )
+                    }
+                Settings()
+                    .tabItem {
+                        Label(
+                            "Settings",
+                            systemImage: "gear"
+                        )
+                    }
+            }
+            .navigationTitle("Workout ME")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: { isInfoPresented = true }) {
+                        Image(systemName: "info.circle")
+                    }
+                    .accessibilityIdentifier("info-button")
                 }
+            }
+        }
+        .sheet(isPresented: $isInfoPresented) {
+            Info(appInfo: appInfo)
+                // .presentationDetents([.height(410)])
+                .presentationDragIndicator(.visible)
+                .presentationDetents([.medium])
+        }
+        .sheet(isPresented: $isSettingsPresented) {
+            Settings()
+                // Need at least this height for iPhone SE.
+                // .presentationDetents([.height(470)])
+                .presentationDragIndicator(.visible)
+                .presentationDetents([.medium])
+        }
+        .task {
+            do {
+                appInfo = try await AppInfo.create()
+            } catch {
+                Log.error("error getting AppInfo: \(error)")
             }
         }
     }
