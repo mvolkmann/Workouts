@@ -1,11 +1,12 @@
 import SwiftUI
 
 struct ContentView: View {
+    @FocusState private var isFocused: Bool
+
     @State private var appInfo: AppInfo?
     @State private var isInfoPresented = false
     @State private var isSettingsPresented = false
     @State private var selection = "Workout"
-    @StateObject private var viewModel = HealthKitViewModel()
 
     init() {
         customizeNavBar()
@@ -26,7 +27,7 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             TabView(selection: $selection) {
-                Workout()
+                Workout(isFocused: $isFocused)
                     .tabItem {
                         Label("Workout", systemImage: "figure.indoor.cycle")
                     }
@@ -39,7 +40,7 @@ struct ContentView: View {
                         )
                     }
                     .tag("Statistics")
-                Settings()
+                Settings(isFocused: $isFocused)
                     .tabItem {
                         Label(
                             "Settings",
@@ -48,8 +49,10 @@ struct ContentView: View {
                     }
                     .tag("Default Settings")
             }
+
             .navigationTitle(selection)
             .navigationBarTitleDisplayMode(.inline)
+
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: { isInfoPresented = true }) {
@@ -58,19 +61,21 @@ struct ContentView: View {
                     .accessibilityIdentifier("info-button")
                 }
             }
+
+            .toolbar {
+                ToolbarItem(placement: .keyboard) {
+                    Button {
+                        isFocused = false
+                    } label: {
+                        Image(systemName: "keyboard.chevron.compact.down")
+                    }
+                }
+            }
         }
 
         .sheet(isPresented: $isInfoPresented) {
             Info(appInfo: appInfo)
                 // .presentationDetents([.height(410)])
-                .presentationDragIndicator(.visible)
-                .presentationDetents([.medium])
-        }
-
-        .sheet(isPresented: $isSettingsPresented) {
-            Settings()
-                // Need at least this height for iPhone SE.
-                // .presentationDetents([.height(470)])
                 .presentationDragIndicator(.visible)
                 .presentationDetents([.medium])
         }

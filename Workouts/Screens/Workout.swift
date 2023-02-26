@@ -11,7 +11,7 @@ struct Workout: View {
     @AppStorage("defaultWorkoutType") private var defaultWorkoutType = "Cycling"
     @AppStorage("preferKilometers") private var preferKilometers = false
 
-    @FocusState private var focusedField: Field?
+    private var isFocused: FocusState<Bool>.Binding
 
     @State private var calories = ""
     @State private var date = Date()
@@ -28,7 +28,9 @@ struct Workout: View {
         endPoint: .bottom
     )
 
-    init() {
+    init(isFocused: FocusState<Bool>.Binding) {
+        self.isFocused = isFocused
+
         // TODO: Move most of this code DateExtension.
         // Remove seconds from the end time.
         let calendar = Calendar.current
@@ -70,7 +72,6 @@ struct Workout: View {
                 // Reset the UI.
                 distance = defaultDistance
                 calories = defaultCalories
-                focusedField = nil
                 message = "A cycling workout was added."
                 isShowingAlert = true
             } catch {
@@ -125,7 +126,7 @@ struct Workout: View {
                     Text("Cycling Miles")
                     Spacer()
                     TextField("", text: $distance)
-                        .focused($focusedField, equals: .cyclingMiles)
+                        .focused(isFocused)
                         .numbersOnly($distance, float: true)
                         .textFieldStyle(.roundedBorder)
                         .frame(maxWidth: 90)
@@ -139,7 +140,7 @@ struct Workout: View {
                      */
                     Spacer()
                     TextField("", text: $calories)
-                        .focused($focusedField, equals: .caloriesBurned)
+                        .focused(isFocused)
                         .numbersOnly($calories)
                         .textFieldStyle(.roundedBorder)
                         .frame(maxWidth: 90)
@@ -181,18 +182,6 @@ struct Workout: View {
         }
         .onChange(of: defaultDistance) { _ in
             distance = defaultDistance
-        }
-
-        // This enables dismissing the keyboard which is
-        // displayed when a TextField has focus.
-        .toolbar {
-            ToolbarItem(placement: .keyboard) {
-                Button {
-                    focusedField = nil
-                } label: {
-                    Image(systemName: "keyboard.chevron.compact.down")
-                }
-            }
         }
     }
 }

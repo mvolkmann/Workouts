@@ -13,9 +13,11 @@ struct Settings: View {
 
     @Environment(\.dismiss) private var dismiss
 
-    @FocusState private var focusedField: Field?
+    private var isFocused: FocusState<Bool>.Binding
 
-    init() {
+    init(isFocused: FocusState<Bool>.Binding) {
+        self.isFocused = isFocused
+
         // This changes the font used by the segmented Picker below.
         UISegmentedControl.appearance().setTitleTextAttributes(
             [.font: UIFont.systemFont(ofSize: 20, weight: .bold)],
@@ -46,7 +48,7 @@ struct Settings: View {
 
                 LabeledContent("Distance") {
                     TextField("distance", text: $defaultDistance)
-                        .focused($focusedField, equals: .miles)
+                        .focused(isFocused)
                         .numbersOnly($defaultDistance, float: true)
                         .textFieldStyle(.roundedBorder)
                         .frame(maxWidth: 90)
@@ -54,7 +56,7 @@ struct Settings: View {
 
                 LabeledContent("Calories") {
                     TextField("calories", text: $defaultCalories)
-                        .focused($focusedField, equals: .calories)
+                        .focused(isFocused)
                         .numbersOnly($defaultDistance, float: true)
                         .textFieldStyle(.roundedBorder)
                         .frame(maxWidth: 90)
@@ -63,18 +65,6 @@ struct Settings: View {
             .font(.title2)
             .fontWeight(.bold)
             .padding()
-        }
-
-        // This enables dismissing the keyboard which is
-        // displayed when a TextField has focus.
-        .toolbar {
-            ToolbarItem(placement: .keyboard) {
-                Button {
-                    focusedField = nil
-                } label: {
-                    Image(systemName: "keyboard.chevron.compact.down")
-                }
-            }
         }
     }
 }
