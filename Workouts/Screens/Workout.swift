@@ -72,7 +72,7 @@ struct Workout: View {
                 // Reset the UI.
                 distance = defaultDistance
                 calories = defaultCalories
-                message = "A cycling workout was added."
+                message = "A \(workoutType) workout was added."
                 isShowingAlert = true
             } catch {
                 message = "Error adding workout: \(error)"
@@ -122,14 +122,16 @@ struct Workout: View {
                     selection: $endTime,
                     displayedComponents: .hourAndMinute
                 )
-                HStack {
-                    Text("Cycling \(preferKilometers ? "Kilometers" : "Miles")")
-                    Spacer()
-                    TextField("", text: $distance)
-                        .focused(isFocused)
-                        .numbersOnly($distance, float: true)
-                        .textFieldStyle(.roundedBorder)
-                        .frame(maxWidth: 90)
+                if distanceWorkouts.contains(workoutType) {
+                    HStack {
+                        Text("\(preferKilometers ? "Kilometers" : "Miles")")
+                        Spacer()
+                        TextField("", text: $distance)
+                            .focused(isFocused)
+                            .numbersOnly($distance, float: true)
+                            .textFieldStyle(.roundedBorder)
+                            .frame(maxWidth: 90)
+                    }
                 }
                 HStack {
                     Text("Calories Burned")

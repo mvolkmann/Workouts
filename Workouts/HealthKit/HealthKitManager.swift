@@ -15,15 +15,26 @@ class HealthKitManager: ObservableObject {
             unit: .largeCalorie(),
             doubleValue: Double(calories)
         )
+
+        let preferKM = UserDefaults.standard.bool(forKey: "preferKilometers")
+        let unit: HKUnit = preferKM ? HKUnit.meter() : HKUnit.mile()
+        let unitDistance = !distanceWorkouts.contains(workoutType) ?
+            0 :
+            (preferKM ? distance * 1000 : distance)
+
+        guard let activityType = activityMap[workoutType] else {
+            throw "no activity type found for \(workoutType)"
+        }
+
         let workout = HKWorkout(
-            activityType: HKWorkoutActivityType.cycling,
+            activityType: activityType,
             start: startTime,
             end: endTime,
             duration: 0, // compute from start and end data
             // See https://forums.swift.org/t/healthkit-hkworkout-totalenergyburn/63359
             // and https://developer.apple.com/forums/thread/725572.
             totalEnergyBurned: energyBurned,
-            totalDistance: HKQuantity(unit: .mile(), doubleValue: distance),
+            totalDistance: HKQuantity(unit: unit, doubleValue: unitDistance),
             metadata: nil
         )
         try await store.save(workout)

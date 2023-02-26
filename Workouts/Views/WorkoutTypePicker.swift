@@ -18,6 +18,10 @@ let activityMap: [String: HKWorkoutActivityType] = [
     "Walking": .walking
 ]
 
+let distanceWorkouts = [
+    "Cycling", "Hiking", "Running", "Swimming", "Walking"
+]
+
 let symbolMap: [String: String] = [
     "Boxing": "figure.boxing",
     "Climbing": "figure.climbing",
