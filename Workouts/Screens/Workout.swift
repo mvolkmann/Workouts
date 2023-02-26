@@ -103,12 +103,6 @@ struct Workout: View {
         ZStack {
             Rectangle().fill(gradient).ignoresSafeArea()
             VStack {
-                /*
-                 Text("Add a Workout")
-                     .font(.title)
-                     .fontWeight(.bold)
-                 */
-
                 if !workoutType.isEmpty {
                     WorkoutTypePicker(workoutType: $workoutType)
                 }

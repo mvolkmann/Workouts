@@ -32,13 +32,8 @@ struct Settings: View {
     var body: some View {
         ZStack {
             Rectangle().fill(gradient).ignoresSafeArea()
-            VStack(spacing: 20) {
-                Text("Default Settings")
-                    .accessibilityIdentifier("settings-title")
-                    .font(.title)
-                    .fontWeight(.bold)
-                    .onTapGesture { dismiss() }
 
+            VStack(spacing: 20) {
                 WorkoutTypePicker(workoutType: $defaultWorkoutType)
 
                 Picker("", selection: $preferKilometers) {
@@ -64,8 +59,6 @@ struct Settings: View {
                         .textFieldStyle(.roundedBorder)
                         .frame(maxWidth: 90)
                 }
-
-                Spacer()
             }
             .font(.title2)
             .fontWeight(.bold)

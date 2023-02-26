@@ -63,6 +63,7 @@
 		1A90BCB429AA8B230093D160 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				1A90BCB929AA92610093D160 /* Settings.swift */,
 				1A90BCB029AA84340093D160 /* Statistics.swift */,
 				1A90BCB229AA84630093D160 /* Workout.swift */,
 			);
@@ -81,9 +82,9 @@
 		1A90BCB629AA8CA60093D160 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				1AAD5E01295B503C00D40C2A /* ContentView.swift */,
 				1A6ACC6E29ABDF09000ACEEB /* DurationPicker.swift */,
 				1A90BCBB29AA99710093D160 /* Info.swift */,
-				1A90BCB929AA92610093D160 /* Settings.swift */,
 				1A90BCB729AA8CCD0093D160 /* WorkoutTypePicker.swift */,
 			);
 			path = Views;
@@ -119,7 +120,6 @@
 			children = (
 				1AAD5DFF295B503C00D40C2A /* WorkoutsApp.swift */,
 				1A90BCBD29AA9AA50093D160 /* AppInfo.swift */,
-				1AAD5E01295B503C00D40C2A /* ContentView.swift */,
 				1A90BCBF29AA9B160093D160 /* Log.swift */,
 				1AAD5E12295B54F300D40C2A /* NumbersOnlyViewModifier.swift */,
 				1AAD5E03295B503D00D40C2A /* Assets.xcassets */,
