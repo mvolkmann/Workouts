@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A41DB2729ABADA200CADFAF /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A41DB2629ABADA200CADFAF /* DateExtension.swift */; };
+		1A6ACC6F29ABDF09000ACEEB /* DurationPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6ACC6E29ABDF09000ACEEB /* DurationPicker.swift */; };
+		1A90BCB129AA84340093D160 /* Statistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A90BCB029AA84340093D160 /* Statistics.swift */; };
+		1A90BCB329AA84630093D160 /* Workout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A90BCB229AA84630093D160 /* Workout.swift */; };
+		1A90BCB829AA8CCD0093D160 /* WorkoutTypePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A90BCB729AA8CCD0093D160 /* WorkoutTypePicker.swift */; };
+		1A90BCBA29AA92610093D160 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A90BCB929AA92610093D160 /* Settings.swift */; };
+		1A90BCBC29AA99710093D160 /* Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A90BCBB29AA99710093D160 /* Info.swift */; };
+		1A90BCBE29AA9AA50093D160 /* AppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A90BCBD29AA9AA50093D160 /* AppInfo.swift */; };
+		1A90BCC029AA9B160093D160 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A90BCBF29AA9B160093D160 /* Log.swift */; };
+		1A90BCC329AA9B420093D160 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A90BCC229AA9B420093D160 /* StringExtension.swift */; };
 		1AAD5E00295B503C00D40C2A /* WorkoutsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD5DFF295B503C00D40C2A /* WorkoutsApp.swift */; };
 		1AAD5E02295B503C00D40C2A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD5E01295B503C00D40C2A /* ContentView.swift */; };
 		1AAD5E04295B503D00D40C2A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1AAD5E03295B503D00D40C2A /* Assets.xcassets */; };
@@ -17,6 +27,16 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1A41DB2629ABADA200CADFAF /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
+		1A6ACC6E29ABDF09000ACEEB /* DurationPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DurationPicker.swift; sourceTree = "<group>"; };
+		1A90BCB029AA84340093D160 /* Statistics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Statistics.swift; sourceTree = "<group>"; };
+		1A90BCB229AA84630093D160 /* Workout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Workout.swift; sourceTree = "<group>"; };
+		1A90BCB729AA8CCD0093D160 /* WorkoutTypePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutTypePicker.swift; sourceTree = "<group>"; };
+		1A90BCB929AA92610093D160 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		1A90BCBB29AA99710093D160 /* Info.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Info.swift; sourceTree = "<group>"; };
+		1A90BCBD29AA9AA50093D160 /* AppInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfo.swift; sourceTree = "<group>"; };
+		1A90BCBF29AA9B160093D160 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		1A90BCC229AA9B420093D160 /* StringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		1AAD5DFC295B503C00D40C2A /* Workouts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Workouts.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AAD5DFF295B503C00D40C2A /* WorkoutsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutsApp.swift; sourceTree = "<group>"; };
 		1AAD5E01295B503C00D40C2A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -40,6 +60,44 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1A90BCB429AA8B230093D160 /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+				1A90BCB029AA84340093D160 /* Statistics.swift */,
+				1A90BCB229AA84630093D160 /* Workout.swift */,
+			);
+			path = Screens;
+			sourceTree = "<group>";
+		};
+		1A90BCB529AA8C830093D160 /* HealthKit */ = {
+			isa = PBXGroup;
+			children = (
+				1AAD5E10295B521B00D40C2A /* HealthKitManager.swift */,
+				1AAD5E0E295B51FD00D40C2A /* HealthKitViewModel.swift */,
+			);
+			path = HealthKit;
+			sourceTree = "<group>";
+		};
+		1A90BCB629AA8CA60093D160 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				1A6ACC6E29ABDF09000ACEEB /* DurationPicker.swift */,
+				1A90BCBB29AA99710093D160 /* Info.swift */,
+				1A90BCB929AA92610093D160 /* Settings.swift */,
+				1A90BCB729AA8CCD0093D160 /* WorkoutTypePicker.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		1A90BCC129AA9B370093D160 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				1A41DB2629ABADA200CADFAF /* DateExtension.swift */,
+				1A90BCC229AA9B420093D160 /* StringExtension.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		1AAD5DF3295B503C00D40C2A = {
 			isa = PBXGroup;
 			children = (
@@ -60,13 +118,17 @@
 			isa = PBXGroup;
 			children = (
 				1AAD5DFF295B503C00D40C2A /* WorkoutsApp.swift */,
+				1A90BCBD29AA9AA50093D160 /* AppInfo.swift */,
 				1AAD5E01295B503C00D40C2A /* ContentView.swift */,
-				1AAD5E0E295B51FD00D40C2A /* HealthKitViewModel.swift */,
-				1AAD5E10295B521B00D40C2A /* HealthKitManager.swift */,
+				1A90BCBF29AA9B160093D160 /* Log.swift */,
 				1AAD5E12295B54F300D40C2A /* NumbersOnlyViewModifier.swift */,
 				1AAD5E03295B503D00D40C2A /* Assets.xcassets */,
 				1AAD5E14295B581400D40C2A /* Info.plist */,
 				1AAD5E0D295B51E900D40C2A /* Workouts.entitlements */,
+				1A90BCC129AA9B370093D160 /* Extensions */,
+				1A90BCB529AA8C830093D160 /* HealthKit */,
+				1A90BCB429AA8B230093D160 /* Screens */,
+				1A90BCB629AA8CA60093D160 /* Views */,
 				1AAD5E05295B503D00D40C2A /* Preview Content */,
 			);
 			path = Workouts;
@@ -151,9 +213,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				1AAD5E13295B54F300D40C2A /* NumbersOnlyViewModifier.swift in Sources */,
+				1A41DB2729ABADA200CADFAF /* DateExtension.swift in Sources */,
 				1AAD5E0F295B51FD00D40C2A /* HealthKitViewModel.swift in Sources */,
+				1A90BCC029AA9B160093D160 /* Log.swift in Sources */,
+				1A90BCB329AA84630093D160 /* Workout.swift in Sources */,
+				1A90BCBE29AA9AA50093D160 /* AppInfo.swift in Sources */,
+				1A90BCBC29AA99710093D160 /* Info.swift in Sources */,
 				1AAD5E02295B503C00D40C2A /* ContentView.swift in Sources */,
 				1AAD5E11295B521B00D40C2A /* HealthKitManager.swift in Sources */,
+				1A90BCB829AA8CCD0093D160 /* WorkoutTypePicker.swift in Sources */,
+				1A90BCBA29AA92610093D160 /* Settings.swift in Sources */,
+				1A90BCB129AA84340093D160 /* Statistics.swift in Sources */,
+				1A6ACC6F29ABDF09000ACEEB /* DurationPicker.swift in Sources */,
+				1A90BCC329AA9B420093D160 /* StringExtension.swift in Sources */,
 				1AAD5E00295B503C00D40C2A /* WorkoutsApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -288,6 +360,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Workouts/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Workout ME";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "To read health data";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "To write workout data";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -320,6 +393,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Workouts/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Workout ME";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "To read health data";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "To write workout data";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

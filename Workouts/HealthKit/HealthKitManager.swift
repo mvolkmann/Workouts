@@ -3,7 +3,8 @@ import HealthKit
 class HealthKitManager: ObservableObject {
     private let store = HKHealthStore()
 
-    func addCyclingWorkout(
+    func addWorkout(
+        workoutType: String,
         startTime: Date,
         endTime: Date,
         distance: Double,
@@ -37,16 +38,7 @@ class HealthKitManager: ObservableObject {
             end: endTime
         )
 
-        // Says "Missing argument for parameter 'completion' in call".
-        // await store.add([sample], to: workout)
-
-        // Says "Consider using asynchronous alternative version",
-        // but I tried that above and it doesn't work!
-        store.add([sample], to: workout) { _, error in
-            if let error {
-                print("error adding sample:", error)
-            }
-        }
+        try await store.addSamples([sample], to: workout)
     }
 
     func authorize(identifiers: [HKQuantityTypeIdentifier]) async throws {
