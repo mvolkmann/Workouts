@@ -123,7 +123,7 @@ struct Workout: View {
                     displayedComponents: .hourAndMinute
                 )
                 HStack {
-                    Text("Cycling Miles")
+                    Text("Cycling \(preferKilometers ? "Kilometers" : "Miles")")
                     Spacer()
                     TextField("", text: $distance)
                         .focused(isFocused)
