@@ -10,6 +10,16 @@ extension Date {
         )!
     }
 
+    func removeSeconds() -> Date {
+        let calendar = Calendar.current
+        let seconds = calendar.component(.second, from: self)
+        return calendar.date(
+            byAdding: .second,
+            value: -seconds,
+            to: self
+        )!
+    }
+
     var startOfYear: Date {
         let year = Calendar.current.component(.year, from: Date())
         return Calendar.current.date(

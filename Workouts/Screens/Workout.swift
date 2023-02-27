@@ -11,16 +11,18 @@ struct Workout: View {
     @AppStorage("defaultWorkoutType") private var defaultWorkoutType = "Cycling"
     @AppStorage("preferKilometers") private var preferKilometers = false
 
-    private var isFocused: FocusState<Bool>.Binding
+    @Environment(\.scenePhase) var scenePhase
 
     @State private var calories = ""
-    @State private var date = Date()
+    @State private var date = Date.now
     @State private var distance = ""
-    @State private var endTime = Date() // adjusted in init
+    @State private var endTime = Date.now // adjusted in init
     @State private var isShowingAlert = false
     @State private var message = ""
-    @State private var startTime = Date() // adjusted in init
+    @State private var startTime = Date.now // adjusted in init
     @State private var workoutType = ""
+
+    private var isFocused: FocusState<Bool>.Binding
 
     private let gradient = LinearGradient(
         colors: [.orange, .white],
@@ -31,24 +33,12 @@ struct Workout: View {
     init(isFocused: FocusState<Bool>.Binding) {
         self.isFocused = isFocused
 
-        // TODO: Move most of this code DateExtension.
-        // Remove seconds from the end time.
-        let calendar = Calendar.current
-        let endSeconds = calendar.component(.second, from: endTime)
-        let secondsCleared = calendar.date(
-            byAdding: .second,
-            value: -endSeconds,
-            to: endTime
-        )!
-        _endTime = State(initialValue: secondsCleared)
-
-        // Set start time to one hour before the end time.
-        let oneHourBefore = calendar.date(
-            byAdding: .hour,
-            value: -1,
-            to: endTime
-        )!
-        _startTime = State(initialValue: oneHourBefore)
+        // We can't just call reset here because in the initializer
+        // we need to create new State objects for endTime and startTime.
+        let newEndTime = date.removeSeconds()
+        _endTime = State(initialValue: newEndTime)
+        let newStartTime = newEndTime.minutesBefore(Int(defaultDuration) ?? 0)
+        _startTime = State(initialValue: newStartTime)
     }
 
     private func addWorkout() {
@@ -98,6 +88,12 @@ struct Workout: View {
         let met = 11.0 // metabolic equivalent
         let caloriesPerMinute = met * weight * 3.5 / 200.0
         return Int(caloriesPerMinute * Double(minutes))
+    }
+
+    private func reset() {
+        date = Date.now
+        endTime = date.removeSeconds()
+        startTime = endTime.minutesBefore(Int(defaultDuration) ?? 0)
     }
 
     var body: some View {
@@ -177,13 +173,21 @@ struct Workout: View {
         .onChange(of: defaultCalories) { _ in
             calories = defaultCalories
         }
+
         .onChange(of: defaultDuration) { _ in
             if let minutes = Int(defaultDuration) {
                 startTime = endTime.minutesBefore(minutes)
             }
         }
+
         .onChange(of: defaultDistance) { _ in
             distance = defaultDistance
+        }
+
+        .onChange(of: scenePhase) { [scenePhase] newPhase in
+            if scenePhase == .background, newPhase == .inactive {
+                reset()
+            }
         }
     }
 }
