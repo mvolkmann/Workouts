@@ -1,0 +1,38 @@
+## User settings
+xcuserdata/
+
+## Obj-C/Swift specific
+*.hmap
+
+## App packaging
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+## Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+.build/
+
+Carthage/Build/
+
+Dependencies/
+.accio/
+
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+fastlane/AuthKey_*.p8
+fastlane/.env.default
+*.cer
+*.certSigningRequest
+*.mobileprovision
+*.p12
+
+iOSInjectionProject/
+
+Workout.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/
+Workout.xcodeproj/xcshareddata/
+
