@@ -10,20 +10,24 @@ class HealthKitManager: ObservableObject {
         distance: Double,
         calories: Int
     ) async throws {
-        let energyBurned = HKQuantity(
-            unit: .largeCalorie(),
-            doubleValue: Double(calories)
-        )
+        guard let activityType = activityMap[workoutType] else {
+            throw "no activity type found for \(workoutType)"
+        }
 
         let preferKM = UserDefaults.standard.bool(forKey: "preferKilometers")
         let unit: HKUnit = preferKM ? HKUnit.meter() : HKUnit.mile()
         let unitDistance = !distanceWorkouts.contains(workoutType) ?
             0 :
             (preferKM ? distance * 1000 : distance)
+        let distanceQuantity = HKQuantity(
+            unit: unit,
+            doubleValue: unitDistance
+        )
 
-        guard let activityType = activityMap[workoutType] else {
-            throw "no activity type found for \(workoutType)"
-        }
+        let energyBurnedQuantity = HKQuantity(
+            unit: .largeCalorie(),
+            doubleValue: Double(calories)
+        )
 
         let workout = HKWorkout(
             activityType: activityType,
@@ -32,29 +36,39 @@ class HealthKitManager: ObservableObject {
             duration: 0, // compute from start and end data
             // See https://forums.swift.org/t/healthkit-hkworkout-totalenergyburn/63359
             // and https://developer.apple.com/forums/thread/725572.
-            totalEnergyBurned: energyBurned,
-            totalDistance: HKQuantity(unit: unit, doubleValue: unitDistance),
+            totalEnergyBurned: energyBurnedQuantity,
+            totalDistance: distanceQuantity,
             metadata: nil
         )
         try await store.save(workout)
 
-        let energyBurnedType = HKObjectType.quantityType(
-            forIdentifier: HKQuantityTypeIdentifier.activeEnergyBurned
+        let distanceType = HKObjectType.quantityType(
+            forIdentifier: .distanceCycling
         )!
-        let sample = HKQuantitySample(
-            type: energyBurnedType,
-            quantity: energyBurned,
+        let distanceSample = HKQuantitySample(
+            type: distanceType,
+            quantity: distanceQuantity,
             start: startTime,
             end: endTime
         )
 
-        try await store.addSamples([sample], to: workout)
+        let energyBurnedType = HKObjectType.quantityType(
+            forIdentifier: .activeEnergyBurned
+        )!
+        let energySample = HKQuantitySample(
+            type: energyBurnedType,
+            quantity: energyBurnedQuantity,
+            start: startTime,
+            end: endTime
+        )
 
         // TODO: Why doesn't the Health app show a new entry under
         // TODO: "Cycling Distance" when the activityType is .cycling?
         // TODO: Probably have the same issue for all other activity types
         // TODO: that include a distance.
         // See https://developer.apple.com/forums/thread/725645.
+        // TODO: Perhaps adding distanceSample here fixes the problem!
+        try await store.addSamples([distanceSample, energySample], to: workout)
     }
 
     func authorize(identifiers: [HKQuantityTypeIdentifier]) async throws {
