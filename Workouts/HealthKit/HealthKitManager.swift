@@ -11,7 +11,6 @@ class HealthKitManager: ObservableObject {
         calories: Int
     ) async throws {
         let energyBurned = HKQuantity(
-            // unit: .kilocalorie(),
             unit: .largeCalorie(),
             doubleValue: Double(calories)
         )

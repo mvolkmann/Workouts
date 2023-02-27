@@ -53,20 +53,23 @@ struct Statistics: View {
                     .foregroundColor(.accentColor)
                     .padding(.bottom, 10)
                 VStack(alignment: .leading) {
-                    labelledValue("Average Heart Rate", viewModel.heartRate)
+                    labelledValue("Heart Rate Average", viewModel.heartRate)
                     labelledValue(
-                        "Average Resting Heart Rate",
+                        "Resting Heart Rate Average",
                         viewModel.restingHeartRate
                     )
-                    labelledValue("Steps", viewModel.steps)
+                    labelledValue("Steps per day", viewModel.steps / 7)
+                    let active = viewModel.activeEnergyBurned / 7
+                    labelledValue("Active Calories burned per day", active)
+                    let basal = viewModel.basalEnergyBurned / 7
+                    labelledValue("Basal Calories burned per day", basal)
                     labelledValue(
-                        "Calories Burned",
-                        viewModel.activeEnergyBurned
+                        "Total Calories burned per day",
+                        active + basal
                     )
                 }
             }
-            .font(.title2)
-            .fontWeight(.bold)
+            .font(.headline)
             .padding()
         }
     }

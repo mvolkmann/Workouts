@@ -4,6 +4,7 @@ import HealthKit
 class HealthKitViewModel: ObservableObject {
     // These values are the sum over the past seven days.
     @Published private(set) var activeEnergyBurned: Double = 0
+    @Published private(set) var basalEnergyBurned: Double = 0
     @Published private(set) var heartRate: Double = 0
     @Published private(set) var restingHeartRate: Double = 0
     @Published private(set) var steps: Double = 0
@@ -18,6 +19,7 @@ class HealthKitViewModel: ObservableObject {
             do {
                 try await manager.authorize(identifiers: [
                     .activeEnergyBurned,
+                    .basalEnergyBurned,
                     .distanceCycling,
                     .distanceWalkingRunning,
                     .heartRate,
@@ -34,7 +36,13 @@ class HealthKitViewModel: ObservableObject {
 
                 activeEnergyBurned = try await manager.sum(
                     identifier: .activeEnergyBurned,
-                    unit: .kilocalorie(),
+                    unit: .largeCalorie(),
+                    startDate: startDate,
+                    endDate: endDate
+                )
+                basalEnergyBurned = try await manager.sum(
+                    identifier: .basalEnergyBurned,
+                    unit: .largeCalorie(),
                     startDate: startDate,
                     endDate: endDate
                 )
