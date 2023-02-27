@@ -64,8 +64,6 @@ class HealthKitManager: ObservableObject {
 
         // TODO: Why doesn't the Health app show a new entry under
         // TODO: "Cycling Distance" when the activityType is .cycling?
-        // TODO: Probably have the same issue for all other activity types
-        // TODO: that include a distance.
         // See https://developer.apple.com/forums/thread/725645.
         // TODO: Perhaps adding distanceSample here fixes the problem!
         try await store.addSamples([distanceSample, energySample], to: workout)

@@ -30,14 +30,19 @@ struct Statistics: View {
         }
     }
 
+    private func title(_ text: String) -> some View {
+        Text(text)
+            .font(.title)
+            .fontWeight(.bold)
+            .foregroundColor(.accentColor)
+            .padding(.bottom, 10)
+    }
+
     var body: some View {
         ZStack {
             Rectangle().fill(gradient).ignoresSafeArea()
             VStack {
-                Text("Since Start of Year")
-                    .font(.title)
-                    .foregroundColor(.accentColor)
-                    .padding(.bottom, 10)
+                title("Since Start of Year")
                 VStack(alignment: .leading) {
                     labelledValue(
                         "Walk+Run Distance",
@@ -48,10 +53,7 @@ struct Statistics: View {
 
                 Divider()
 
-                Text("Over Last 7 Days")
-                    .font(.title)
-                    .foregroundColor(.accentColor)
-                    .padding(.bottom, 10)
+                title("Over Last 7 Days")
                 VStack(alignment: .leading) {
                     labelledValue("Heart Rate Average", viewModel.heartRate)
                     labelledValue(

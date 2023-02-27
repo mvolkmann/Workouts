@@ -23,6 +23,7 @@ struct Workout: View {
     @State private var workoutType = ""
 
     private var isFocused: FocusState<Bool>.Binding
+    private let textFieldWidth: CGFloat = 110
 
     private let gradient = LinearGradient(
         colors: [.orange, .white],
@@ -33,7 +34,7 @@ struct Workout: View {
     init(isFocused: FocusState<Bool>.Binding) {
         self.isFocused = isFocused
 
-        // We can't just call reset here because in the initializer
+        // We can't just call resetDateAndTimes here because in the initializer
         // we need to create new State objects for endTime and startTime.
         let newEndTime = date.removeSeconds()
         _endTime = State(initialValue: newEndTime)
@@ -90,7 +91,7 @@ struct Workout: View {
         return Int(caloriesPerMinute * Double(minutes))
     }
 
-    private func reset() {
+    private func resetDateAndTimes() {
         date = Date.now
         endTime = date.removeSeconds()
         startTime = endTime.minutesBefore(Int(defaultDuration) ?? 0)
@@ -99,25 +100,36 @@ struct Workout: View {
     var body: some View {
         ZStack {
             Rectangle().fill(gradient).ignoresSafeArea()
-            VStack {
+            VStack(spacing: 10) {
                 if !workoutType.isEmpty {
                     WorkoutTypePicker(workoutType: $workoutType)
                 }
+
                 DatePicker(
                     "Date",
                     selection: $date,
                     displayedComponents: .date
                 )
+
                 DatePicker(
                     "Start Time",
                     selection: $startTime,
                     displayedComponents: .hourAndMinute
                 )
+
                 DatePicker(
                     "End Time",
                     selection: $endTime,
                     displayedComponents: .hourAndMinute
                 )
+
+                HStack {
+                    Spacer()
+                    Button(action: resetDateAndTimes) {
+                        Image(systemName: "arrow.clockwise")
+                    }
+                }
+
                 if distanceWorkouts.contains(workoutType) {
                     HStack {
                         Text("\(preferKilometers ? "Kilometers" : "Miles")")
@@ -126,9 +138,10 @@ struct Workout: View {
                             .focused(isFocused)
                             .numbersOnly($distance, float: true)
                             .textFieldStyle(.roundedBorder)
-                            .frame(maxWidth: 90)
+                            .frame(maxWidth: textFieldWidth)
                     }
                 }
+
                 HStack {
                     Text("Calories Burned")
                     /*
@@ -141,8 +154,9 @@ struct Workout: View {
                         .focused(isFocused)
                         .numbersOnly($calories)
                         .textFieldStyle(.roundedBorder)
-                        .frame(maxWidth: 90)
+                        .frame(maxWidth: textFieldWidth)
                 }
+
                 Button("Add Workout") {
                     addWorkout()
                 }
@@ -186,7 +200,7 @@ struct Workout: View {
 
         .onChange(of: scenePhase) { [scenePhase] newPhase in
             if scenePhase == .background, newPhase == .inactive {
-                reset()
+                resetDateAndTimes()
             }
         }
     }

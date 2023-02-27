@@ -3,7 +3,7 @@ import SwiftUI
 struct Info: View {
     @Environment(\.dismiss) private var dismiss
 
-    let appInfo: AppInfo?
+    private let appInfo: AppInfo?
 
     init(appInfo: AppInfo?) {
         self.appInfo = appInfo
@@ -29,9 +29,10 @@ struct Info: View {
                     .onTapGesture { dismiss() }
                 // Image("AppIcon") // doesn't work
                 if let appIcon {
+                    let size: CGFloat = 100
                     Image(uiImage: appIcon)
                         .resizable()
-                        .frame(width: 100, height: 100)
+                        .frame(width: size, height: size)
                 }
                 Text("Created by".localized + " R. Mark Volkmann")
             } else {

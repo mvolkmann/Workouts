@@ -15,6 +15,8 @@ struct Settings: View {
 
     private var isFocused: FocusState<Bool>.Binding
 
+    private let textFieldWidth: CGFloat = 110
+
     init(isFocused: FocusState<Bool>.Binding) {
         self.isFocused = isFocused
 
@@ -51,7 +53,7 @@ struct Settings: View {
                         .focused(isFocused)
                         .numbersOnly($defaultDistance, float: true)
                         .textFieldStyle(.roundedBorder)
-                        .frame(maxWidth: 90)
+                        .frame(maxWidth: textFieldWidth)
                 }
 
                 LabeledContent("Calories") {
@@ -59,7 +61,7 @@ struct Settings: View {
                         .focused(isFocused)
                         .numbersOnly($defaultDistance, float: true)
                         .textFieldStyle(.roundedBorder)
-                        .frame(maxWidth: 90)
+                        .frame(maxWidth: textFieldWidth)
                 }
             }
             .font(.title2)
