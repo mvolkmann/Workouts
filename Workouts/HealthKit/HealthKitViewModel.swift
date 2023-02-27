@@ -12,7 +12,6 @@ class HealthKitViewModel: ObservableObject {
     @Published private(set) var distanceCycling: Double = 0
     @Published private(set) var distanceWalkingRunning: Double = 0
 
-
     init() {
         Task {
             let manager = HealthKitManager()
@@ -51,17 +50,16 @@ class HealthKitViewModel: ObservableObject {
                     startDate: endDate.startOfYear,
                     endDate: endDate
                 )
-                // TODO: Seems like this value is too high.
-                // TODO: Can we exclude samples during exercise?
+                let bpm = HKUnit(from: "count/min")
                 heartRate = try await manager.average(
                     identifier: .heartRate,
-                    unit: HKUnit(from: "count/min"),
+                    unit: bpm,
                     startDate: startDate,
                     endDate: endDate
                 )
                 restingHeartRate = try await manager.average(
                     identifier: .restingHeartRate,
-                    unit: HKUnit(from: "count/min"),
+                    unit: bpm,
                     startDate: startDate,
                     endDate: endDate
                 )
