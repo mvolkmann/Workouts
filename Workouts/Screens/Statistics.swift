@@ -74,5 +74,8 @@ struct Statistics: View {
             .font(.headline)
             .padding()
         }
+        .task {
+            await viewModel.load()
+        }
     }
 }
