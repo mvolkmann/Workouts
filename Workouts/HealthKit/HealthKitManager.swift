@@ -105,13 +105,10 @@ class HealthKitManager: ObservableObject {
         )
         writeSet.insert(HKWorkoutType.workoutType())
 
-        print("\(#fileID) \(#function) writeSet =", writeSet)
-        print("\(#fileID) \(#function) readSet =", readSet)
-        let authorized = try await store.requestAuthorization(
+        try await store.requestAuthorization(
             toShare: writeSet,
             read: readSet
         )
-        print("\(#fileID) \(#function) authorized =", authorized)
     }
 
     func average(

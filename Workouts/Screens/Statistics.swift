@@ -3,6 +3,7 @@ import SwiftUI
 struct Statistics: View {
     @AppStorage("preferKilometers") private var preferKilometers = false
     @Environment(\.colorScheme) private var colorScheme
+    @State private var loading = true
     @StateObject private var viewModel = HealthKitViewModel()
 
     private var distanceWalkingRunning: Int {
@@ -38,44 +39,51 @@ struct Statistics: View {
             let fill = gradient(.yellow, colorScheme: colorScheme)
             Rectangle().fill(fill).ignoresSafeArea()
             VStack {
-                title("Since Start of Year")
-                VStack(alignment: .leading) {
-                    labelledValue(
-                        "Swimming Distance",
-                        viewModel.distanceSwimming
-                    )
-                    labelledValue("Cycling Distance", viewModel.distanceCycling)
-                    labelledValue(
-                        "Walk+Run Distance",
-                        viewModel.distanceWalkingRunning
-                    )
-                }
+                if !loading {
+                    title("Since Start of Year")
+                    VStack(alignment: .leading) {
+                        labelledValue(
+                            "Swimming Distance",
+                            viewModel.distanceSwimming
+                        )
+                        labelledValue(
+                            "Cycling Distance",
+                            viewModel.distanceCycling
+                        )
+                        labelledValue(
+                            "Walk+Run Distance",
+                            viewModel.distanceWalkingRunning
+                        )
+                    }
 
-                Divider()
+                    Divider()
 
-                title("Over Last 7 Days")
-                VStack(alignment: .leading) {
-                    labelledValue("Heart Rate Average", viewModel.heartRate)
-                    labelledValue(
-                        "Resting Heart Rate Average",
-                        viewModel.restingHeartRate
-                    )
-                    labelledValue("Steps per day", viewModel.steps / 7)
-                    let active = viewModel.activeEnergyBurned / 7
-                    labelledValue("Active Calories burned per day", active)
-                    let basal = viewModel.basalEnergyBurned / 7
-                    labelledValue("Basal Calories burned per day", basal)
-                    labelledValue(
-                        "Total Calories burned per day",
-                        active + basal
-                    )
+                    title("Over Last 7 Days")
+                    VStack(alignment: .leading) {
+                        labelledValue("Heart Rate Average", viewModel.heartRate)
+                        labelledValue(
+                            "Resting Heart Rate Average",
+                            viewModel.restingHeartRate
+                        )
+                        labelledValue("Steps per day", viewModel.steps / 7)
+                        let active = viewModel.activeEnergyBurned / 7
+                        labelledValue("Active Calories burned per day", active)
+                        let basal = viewModel.basalEnergyBurned / 7
+                        labelledValue("Basal Calories burned per day", basal)
+                        labelledValue(
+                            "Total Calories burned per day",
+                            active + basal
+                        )
+                    }
                 }
             }
             .font(.headline)
             .padding()
         }
         .task {
+            loading = true
             await viewModel.load()
+            loading = false
         }
     }
 }
