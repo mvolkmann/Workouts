@@ -31,11 +31,13 @@ struct Settings: View {
             VStack(spacing: 20) {
                 WorkoutTypePicker(workoutType: $defaultWorkoutType)
 
-                Picker("", selection: $preferKilometers) {
-                    Text("Miles").tag(false)
-                    Text("Kilometers").tag(true)
+                if distanceWorkouts.contains(defaultWorkoutType) {
+                    Picker("", selection: $preferKilometers) {
+                        Text("Miles").tag(false)
+                        Text("Kilometers").tag(true)
+                    }
+                    .pickerStyle(.segmented)
                 }
-                .pickerStyle(.segmented)
 
                 DurationPicker(duration: $defaultDuration)
 
