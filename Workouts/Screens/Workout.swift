@@ -43,7 +43,6 @@ struct Workout: View {
                 // Need to convert Int32 to Int.
                 let caloriesNumber = Int((calories as NSString).intValue)
 
-                print("adding workout")
                 try await HealthKitManager().addWorkout(
                     workoutType: workoutType,
                     startTime: startTime,
@@ -51,7 +50,6 @@ struct Workout: View {
                     distance: distanceNumber,
                     calories: caloriesNumber
                 )
-                print("added workout")
 
                 // Reset the UI.
                 distance = defaultDistance
@@ -59,8 +57,6 @@ struct Workout: View {
                 message = "A \(workoutType) workout was added."
                 isShowingAlert = true
             } catch {
-                // TODO: This should not report SUCCESS!
-                print("ERROR:", error)
                 message = "Error adding workout: \(error)"
                 isShowingAlert = true
             }
@@ -165,7 +161,7 @@ struct Workout: View {
         }
 
         .alert(
-            "Success",
+            message.starts(with: "Error") ? "Error" : "Success",
             isPresented: $isShowingAlert,
             actions: {},
             message: { Text(message) }

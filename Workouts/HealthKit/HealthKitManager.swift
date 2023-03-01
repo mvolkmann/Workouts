@@ -53,7 +53,6 @@ class HealthKitManager: ObservableObject {
                 doubleValue: unitDistance
             )
 
-            // TODO: This sample works fine for cycling, but not for anything else!
             let distanceSample = HKQuantitySample(
                 type: distanceType,
                 quantity: distanceQuantity!,
@@ -90,11 +89,7 @@ class HealthKitManager: ObservableObject {
             metadata: nil
         )
         try await store.save(workout)
-        print("adding samples")
-        // TODO: We get a "Not authorized" error here unless the workout type is "Cycling".
-        // TODO: The workout is added, but the samples are not.
         try await store.addSamples(samples, to: workout)
-        print("added samples")
     }
 
     func authorize(
@@ -150,27 +145,20 @@ class HealthKitManager: ObservableObject {
         startDate: Date,
         endDate: Date
     ) async throws -> Double {
-        print("HealthKitManager.sum: identifier =", identifier)
-        print("HealthKitManager.sum: unit =", unit)
-        print("HealthKitManager.sum: startDate =", startDate)
-        print("HealthKitManager.sum: endDate =", endDate)
         return try await withCheckedThrowingContinuation { completion in
             let quantityType = HKQuantityType.quantityType(
                 forIdentifier: identifier
             )!
-            print("HealthKitManager.sum: quantityType =", quantityType)
             let predicate: NSPredicate? = HKQuery.predicateForSamples(
                 withStart: startDate,
                 end: endDate
             )
-            print("HealthKitManager.sum: predicate =", predicate)
             let query = HKStatisticsQuery(
                 quantityType: quantityType,
                 quantitySamplePredicate: predicate,
                 options: .cumulativeSum
             ) { (_: HKStatisticsQuery, result: HKStatistics?, error: Error?) in
                 if let error {
-                    print("HealthKitManager.sum: error =", error)
                     completion.resume(throwing: error)
                 } else {
                     let quantity: HKQuantity? = result?.sumQuantity()
