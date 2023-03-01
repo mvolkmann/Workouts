@@ -145,7 +145,7 @@ class HealthKitManager: ObservableObject {
         startDate: Date,
         endDate: Date
     ) async throws -> Double {
-        return try await withCheckedThrowingContinuation { completion in
+        try await withCheckedThrowingContinuation { completion in
             let quantityType = HKQuantityType.quantityType(
                 forIdentifier: identifier
             )!
