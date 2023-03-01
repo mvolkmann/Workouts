@@ -1,10 +1,6 @@
 import SwiftUI
 
 struct Settings: View {
-    enum Field {
-        case miles, calories
-    }
-
     @AppStorage("defaultCalories") private var defaultCalories = "850"
     @AppStorage("defaultDuration") private var defaultDuration = "60"
     @AppStorage("defaultDistance") private var defaultDistance = "20"

@@ -71,6 +71,7 @@ struct Statistics: View {
             .padding()
         }
         .task {
+            print("\(#fileID) task entered")
             await viewModel.load()
         }
     }
