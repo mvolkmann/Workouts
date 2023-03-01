@@ -11,6 +11,7 @@ class HealthKitViewModel: ObservableObject {
 
     // These values are the sum since the beginning of the year.
     @Published private(set) var distanceCycling: Double = 0
+    @Published private(set) var distanceSwimming: Double = 0
     @Published private(set) var distanceWalkingRunning: Double = 0
 
     func load() async {
@@ -34,6 +35,7 @@ class HealthKitViewModel: ObservableObject {
                     .distanceWalkingRunning,
                 ]
             )
+            print("\(#fileID) \(#function) got authorization")
 
             let endDate = Date.now
             let startDate = Calendar.current.date(
@@ -60,11 +62,21 @@ class HealthKitViewModel: ObservableObject {
                 startDate: endDate.startOfYear,
                 endDate: endDate
             )
+            distanceSwimming = try await manager.sum(
+                identifier: .distanceSwimming,
+                unit: .mile(),
+                startDate: endDate.startOfYear,
+                endDate: endDate
+            )
             distanceWalkingRunning = try await manager.sum(
                 identifier: .distanceWalkingRunning,
                 unit: .mile(),
                 startDate: endDate.startOfYear,
                 endDate: endDate
+            )
+            print(
+                "\(#fileID) \(#function) distanceWalkingRunning =",
+                distanceWalkingRunning
             )
             let bpm = HKUnit(from: "count/min")
             heartRate = try await manager.average(

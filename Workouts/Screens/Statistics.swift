@@ -41,10 +41,14 @@ struct Statistics: View {
                 title("Since Start of Year")
                 VStack(alignment: .leading) {
                     labelledValue(
+                        "Swimming Distance",
+                        viewModel.distanceSwimming
+                    )
+                    labelledValue("Cycling Distance", viewModel.distanceCycling)
+                    labelledValue(
                         "Walk+Run Distance",
                         viewModel.distanceWalkingRunning
                     )
-                    labelledValue("Cycling Distance", viewModel.distanceCycling)
                 }
 
                 Divider()
