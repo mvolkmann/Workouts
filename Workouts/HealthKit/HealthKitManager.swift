@@ -165,7 +165,12 @@ class HealthKitManager: ObservableObject {
                 options: .cumulativeSum
             ) { (_: HKStatisticsQuery, result: HKStatistics?, error: Error?) in
                 if let error {
-                    completion.resume(throwing: error)
+                    if error.localizedDescription
+                        .starts(with: "No data available") {
+                        completion.resume(returning: 0)
+                    } else {
+                        completion.resume(throwing: error)
+                    }
                 } else {
                     let quantity: HKQuantity? = result?.sumQuantity()
                     let result = quantity?.doubleValue(for: unit)

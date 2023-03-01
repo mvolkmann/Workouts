@@ -20,7 +20,7 @@ class HealthKitViewModel: ObservableObject {
             try await manager.authorize(
                 read: [
                     .activeEnergyBurned,
-                    .basalEnergyBurned,
+                    .basalEnergyBurned, // resting energy
                     .distanceCycling,
                     .distanceSwimming,
                     .distanceWalkingRunning,
@@ -35,7 +35,6 @@ class HealthKitViewModel: ObservableObject {
                     .distanceWalkingRunning,
                 ]
             )
-            print("\(#fileID) \(#function) got authorization")
 
             let endDate = Date.now
             let startDate = Calendar.current.date(
@@ -73,10 +72,6 @@ class HealthKitViewModel: ObservableObject {
                 unit: .mile(),
                 startDate: endDate.startOfYear,
                 endDate: endDate
-            )
-            print(
-                "\(#fileID) \(#function) distanceWalkingRunning =",
-                distanceWalkingRunning
             )
             let bpm = HKUnit(from: "count/min")
             heartRate = try await manager.average(
