@@ -11,10 +11,10 @@ struct Settings: View {
     @AppStorage("defaultWorkoutType") private var defaultWorkoutType = "Cycling"
     @AppStorage("preferKilometers") private var preferKilometers = false
 
+    @Environment(\.colorScheme) private var colorScheme
     @Environment(\.dismiss) private var dismiss
 
     private var isFocused: FocusState<Bool>.Binding
-
     private let textFieldWidth: CGFloat = 110
 
     init(isFocused: FocusState<Bool>.Binding) {
@@ -27,15 +27,10 @@ struct Settings: View {
         )
     }
 
-    private let gradient = LinearGradient(
-        colors: [.red, .white],
-        startPoint: .top,
-        endPoint: .bottom
-    )
-
     var body: some View {
         ZStack {
-            Rectangle().fill(gradient).ignoresSafeArea()
+            let fill = gradient(.red, colorScheme: colorScheme)
+            Rectangle().fill(fill).ignoresSafeArea()
 
             VStack(spacing: 20) {
                 WorkoutTypePicker(workoutType: $defaultWorkoutType)
@@ -48,12 +43,14 @@ struct Settings: View {
 
                 DurationPicker(duration: $defaultDuration)
 
-                LabeledContent("Distance") {
-                    TextField("distance", text: $defaultDistance)
-                        .focused(isFocused)
-                        .numbersOnly($defaultDistance, float: true)
-                        .textFieldStyle(.roundedBorder)
-                        .frame(maxWidth: textFieldWidth)
+                if distanceWorkouts.contains(defaultWorkoutType) {
+                    LabeledContent("Distance") {
+                        TextField("distance", text: $defaultDistance)
+                            .focused(isFocused)
+                            .numbersOnly($defaultDistance, float: true)
+                            .textFieldStyle(.roundedBorder)
+                            .frame(maxWidth: textFieldWidth)
+                    }
                 }
 
                 LabeledContent("Calories") {

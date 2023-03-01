@@ -11,6 +11,7 @@ struct Workout: View {
     @AppStorage("defaultWorkoutType") private var defaultWorkoutType = "Cycling"
     @AppStorage("preferKilometers") private var preferKilometers = false
 
+    @Environment(\.colorScheme) private var colorScheme
     @Environment(\.scenePhase) var scenePhase
 
     @State private var calories = ""
@@ -24,12 +25,6 @@ struct Workout: View {
 
     private var isFocused: FocusState<Bool>.Binding
     private let textFieldWidth: CGFloat = 110
-
-    private let gradient = LinearGradient(
-        colors: [.orange, .white],
-        startPoint: .top,
-        endPoint: .bottom
-    )
 
     init(isFocused: FocusState<Bool>.Binding) {
         self.isFocused = isFocused
@@ -99,7 +94,8 @@ struct Workout: View {
 
     var body: some View {
         ZStack {
-            Rectangle().fill(gradient).ignoresSafeArea()
+            let fill = gradient(.orange, colorScheme: colorScheme)
+            Rectangle().fill(fill).ignoresSafeArea()
             VStack(spacing: 10) {
                 if !workoutType.isEmpty {
                     WorkoutTypePicker(workoutType: $workoutType)

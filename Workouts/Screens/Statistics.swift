@@ -2,13 +2,8 @@ import SwiftUI
 
 struct Statistics: View {
     @AppStorage("preferKilometers") private var preferKilometers = false
+    @Environment(\.colorScheme) private var colorScheme
     @StateObject private var viewModel = HealthKitViewModel()
-
-    private let gradient = LinearGradient(
-        colors: [.yellow, .white],
-        startPoint: .top,
-        endPoint: .bottom
-    )
 
     private var distanceWalkingRunning: Int {
         let miles = viewModel.distanceWalkingRunning
@@ -40,7 +35,8 @@ struct Statistics: View {
 
     var body: some View {
         ZStack {
-            Rectangle().fill(gradient).ignoresSafeArea()
+            let fill = gradient(.yellow, colorScheme: colorScheme)
+            Rectangle().fill(fill).ignoresSafeArea()
             VStack {
                 title("Since Start of Year")
                 VStack(alignment: .leading) {
