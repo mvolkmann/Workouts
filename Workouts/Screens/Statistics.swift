@@ -4,10 +4,10 @@ struct Statistics: View {
     @AppStorage("preferKilometers") private var preferKilometers = false
     @Environment(\.colorScheme) private var colorScheme
     @State private var loading = true
-    @StateObject private var viewModel = HealthKitViewModel()
+    @StateObject private var vm = HealthKitViewModel()
 
     private var distanceWalkingRunning: Int {
-        let miles = viewModel.distanceWalkingRunning
+        let miles = vm.distanceWalkingRunning
         guard preferKilometers else { return round(miles) }
         return round(
             Measurement(value: miles, unit: UnitLength.miles)
@@ -42,33 +42,39 @@ struct Statistics: View {
                 if !loading {
                     title("Since Start of Year")
                     VStack(alignment: .leading) {
-                        labelledValue(
-                            "Swimming Distance",
-                            viewModel.distanceSwimming
-                        )
-                        labelledValue(
-                            "Cycling Distance",
-                            viewModel.distanceCycling
-                        )
-                        labelledValue(
-                            "Walk+Run Distance",
-                            viewModel.distanceWalkingRunning
-                        )
+                        if vm.distanceSwimming > 0 {
+                            labelledValue(
+                                "Swimming Distance",
+                                vm.distanceSwimming
+                            )
+                        }
+                        if vm.distanceCycling > 0 {
+                            labelledValue(
+                                "Cycling Distance",
+                                vm.distanceCycling
+                            )
+                        }
+                        if vm.distanceWalkingRunning > 0 {
+                            labelledValue(
+                                "Walk+Run Distance",
+                                vm.distanceWalkingRunning
+                            )
+                        }
                     }
 
                     Divider()
 
                     title("Over Last 7 Days")
                     VStack(alignment: .leading) {
-                        labelledValue("Heart Rate Average", viewModel.heartRate)
+                        labelledValue("Heart Rate Average", vm.heartRate)
                         labelledValue(
                             "Resting Heart Rate Average",
-                            viewModel.restingHeartRate
+                            vm.restingHeartRate
                         )
-                        labelledValue("Steps per day", viewModel.steps / 7)
-                        let active = viewModel.activeEnergyBurned / 7
+                        labelledValue("Steps per day", vm.steps / 7)
+                        let active = vm.activeEnergyBurned / 7
                         labelledValue("Active Calories burned per day", active)
-                        let basal = viewModel.basalEnergyBurned / 7
+                        let basal = vm.basalEnergyBurned / 7
                         labelledValue("Basal Calories burned per day", basal)
                         labelledValue(
                             "Total Calories burned per day",
@@ -82,7 +88,7 @@ struct Statistics: View {
         }
         .task {
             loading = true
-            await viewModel.load()
+            await vm.load()
             loading = false
         }
     }
