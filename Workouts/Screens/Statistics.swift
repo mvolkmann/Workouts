@@ -150,6 +150,7 @@ struct Statistics: View {
                     let bpm = sample.quantity.doubleValue(for: unit)
                     print("Statistics: bpm =", bpm)
                 }
+                // TODO: Use this data in healthChart above.
             } catch {
                 print("Statistics: error getting heartRate samples")
             }
