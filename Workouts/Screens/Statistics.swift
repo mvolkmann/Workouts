@@ -1,3 +1,5 @@
+import Charts
+import HealthKit
 import SwiftUI
 
 struct Statistics: View {
@@ -16,7 +18,20 @@ struct Statistics: View {
         )
     }
 
-    private func round(_ n: Double) -> Int { Int(n.rounded()) }
+    private var healthChart: some View {
+        print("heartRate data =", vm.heartRate)
+        return Chart {
+            /*
+             ForEach(vm.heartRate, id: \.self) { data in
+             LineMark(
+             x: .value("Date", data.),
+             y: .value("Value", value)
+             )
+             .interpolationMethod(interpolationMethod)
+             }
+             */
+        }
+    }
 
     private func labelledValue(_ label: String, _ value: Double) -> some View {
         HStack {
@@ -26,6 +41,8 @@ struct Statistics: View {
                 .fontWeight(.bold)
         }
     }
+
+    private func round(_ n: Double) -> Int { Int(n.rounded()) }
 
     private var statsForWeek: some View {
         VStack(alignment: .leading) {
@@ -69,6 +86,26 @@ struct Statistics: View {
         }
     }
 
+    private func weekSamples(
+        identifier: HKQuantityTypeIdentifier,
+        unit: HKUnit
+    ) async throws -> [HKQuantitySample] {
+        let manager = HealthKitManager()
+        let endDate = Date.now
+        let startDate = Calendar.current.date(
+            byAdding: DateComponents(day: -7),
+            to: endDate,
+            wrappingComponents: false // TODO: Why needed?
+        )!
+        let samples = try await manager.samples(
+            identifier: identifier,
+            unit: unit,
+            startDate: startDate,
+            endDate: endDate
+        )
+        return samples
+    }
+
     var body: some View {
         ZStack {
             let fill = gradient(.yellow, colorScheme: colorScheme)
@@ -86,6 +123,7 @@ struct Statistics: View {
                         statsForYear
                             .font(.title)
                     } else {
+                        healthChart
                         statsForWeek
                             .font(.headline)
                     }
@@ -99,20 +137,22 @@ struct Statistics: View {
             await vm.load()
             loading = false
 
-            // This is for testing the ability to examine individual samples.
-            let manager = HealthKitManager()
-            let endDate = Date.now
-            let startDate = Calendar.current.date(
-                byAdding: DateComponents(day: -2),
-                to: endDate,
-                wrappingComponents: false
-            )!
-            let n = try? await manager.samples(
-                identifier: .distanceWalkingRunning,
-                unit: .mile(),
-                startDate: startDate,
-                endDate: endDate
-            )
+            do {
+                // let unit = HKUnit.mile()
+                let unit = HKUnit(from: "count/min")
+                let heartSamples = try await weekSamples(
+                    identifier: .heartRate,
+                    unit: unit
+                )
+                if let sample = heartSamples.first {
+                    print("Statistics: startDate =", sample.startDate)
+                    print("Statistics: endDate =", sample.endDate)
+                    let bpm = sample.quantity.doubleValue(for: unit)
+                    print("Statistics: bpm =", bpm)
+                }
+            } catch {
+                print("Statistics: error getting heartRate samples")
+            }
         }
     }
 }

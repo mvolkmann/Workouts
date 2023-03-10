@@ -147,7 +147,7 @@ class HealthKitManager: ObservableObject {
         unit: HKUnit,
         startDate: Date,
         endDate: Date
-    ) async throws -> Int {
+    ) async throws -> [HKQuantitySample] {
         try await withCheckedThrowingContinuation { completion in
             let quantityType = HKQuantityType.quantityType(
                 forIdentifier: identifier
@@ -169,23 +169,27 @@ class HealthKitManager: ObservableObject {
                 if let error {
                     if error.localizedDescription
                         .starts(with: "No data available") {
-                        completion.resume(returning: 0)
+                        completion.resume(returning: [])
                     } else {
                         completion.resume(throwing: error)
                     }
                 } else {
                     guard let samples = results as? [HKQuantitySample] else {
-                        completion.resume(returning: 1)
+                        completion
+                            .resume(throwing: "samples have unexpected type")
                         return
                     }
-                    for sample in samples {
-                        let feet = sample.quantity.doubleValue(for: .foot())
-                        let seconds =
-                            sample.endDate.timeIntervalSince(sample.startDate)
-                        let feetPerSecond = feet / seconds
-                        // 6 mph is 8.8 ft/s.
-                    }
-                    completion.resume(returning: 2)
+                    completion.resume(returning: samples)
+                    /*
+                     for sample in samples {
+                         let feet = sample.quantity.doubleValue(for: .foot())
+                         let seconds =
+                             sample.endDate.timeIntervalSince(sample.startDate)
+                         let feetPerSecond = feet / seconds
+                         // 6 mph is 8.8 ft/s.
+                     }
+                     completion.resume(returning: 2)
+                     */
                 }
             }
 
