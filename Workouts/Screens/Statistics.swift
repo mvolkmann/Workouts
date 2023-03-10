@@ -84,12 +84,13 @@ struct Statistics: View {
 
                     if statsKind == "year" {
                         statsForYear
+                            .font(.title)
                     } else {
                         statsForWeek
+                            .font(.headline)
                     }
                     Spacer()
                 }
-                .font(.headline)
                 .padding()
             }
         }
