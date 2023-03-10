@@ -142,6 +142,57 @@ class HealthKitManager: ObservableObject {
         }
     }
 
+    func samples(
+        identifier: HKQuantityTypeIdentifier,
+        unit: HKUnit,
+        startDate: Date,
+        endDate: Date
+    ) async throws -> Int {
+        try await withCheckedThrowingContinuation { completion in
+            let quantityType = HKQuantityType.quantityType(
+                forIdentifier: identifier
+            )!
+            let predicate: NSPredicate? = HKQuery.predicateForSamples(
+                withStart: startDate,
+                end: endDate
+            )
+            let query = HKSampleQuery(
+                sampleType: quantityType,
+                predicate: predicate,
+                limit: Int(HKObjectQueryNoLimit),
+                sortDescriptors: nil
+            ) { (
+                _: HKSampleQuery,
+                results: [HKSample]?,
+                error: Error?
+            ) in
+                if let error {
+                    if error.localizedDescription
+                        .starts(with: "No data available") {
+                        completion.resume(returning: 0)
+                    } else {
+                        completion.resume(throwing: error)
+                    }
+                } else {
+                    guard let samples = results as? [HKQuantitySample] else {
+                        completion.resume(returning: 1)
+                        return
+                    }
+                    for sample in samples {
+                        let feet = sample.quantity.doubleValue(for: .foot())
+                        let seconds =
+                            sample.endDate.timeIntervalSince(sample.startDate)
+                        let feetPerSecond = feet / seconds
+                        // 6 mph is 8.8 ft/s.
+                    }
+                    completion.resume(returning: 2)
+                }
+            }
+
+            store.execute(query)
+        }
+    }
+
     func sum(
         identifier: HKQuantityTypeIdentifier,
         unit: HKUnit,

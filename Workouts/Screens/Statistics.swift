@@ -4,6 +4,7 @@ struct Statistics: View {
     @AppStorage("preferKilometers") private var preferKilometers = false
     @Environment(\.colorScheme) private var colorScheme
     @State private var loading = true
+    @State private var statsKind = "year"
     @StateObject private var vm = HealthKitViewModel()
 
     private var distanceWalkingRunning: Int {
@@ -26,70 +27,91 @@ struct Statistics: View {
         }
     }
 
-    private func title(_ text: String) -> some View {
-        Text(text)
-            .font(.title)
-            .fontWeight(.bold)
-            .foregroundColor(.accentColor)
-            .padding(.bottom, 10)
+    private var statsForWeek: some View {
+        VStack(alignment: .leading) {
+            labelledValue("Heart Rate Average", vm.heartRate)
+            labelledValue(
+                "Resting Heart Rate Average",
+                vm.restingHeartRate
+            )
+            labelledValue("Steps per day", vm.steps / 7)
+            let active = vm.activeEnergyBurned / 7
+            labelledValue("Active Calories burned per day", active)
+            let basal = vm.basalEnergyBurned / 7
+            labelledValue("Basal Calories burned per day", basal)
+            labelledValue(
+                "Total Calories burned per day",
+                active + basal
+            )
+        }
+    }
+
+    private var statsForYear: some View {
+        VStack(alignment: .leading) {
+            if vm.distanceSwimming > 0 {
+                labelledValue(
+                    "Swimming Distance",
+                    vm.distanceSwimming
+                )
+            }
+            if vm.distanceCycling > 0 {
+                labelledValue(
+                    "Cycling Distance",
+                    vm.distanceCycling
+                )
+            }
+            if vm.distanceWalkingRunning > 0 {
+                labelledValue(
+                    "Walk+Run Distance",
+                    vm.distanceWalkingRunning
+                )
+            }
+        }
     }
 
     var body: some View {
         ZStack {
             let fill = gradient(.yellow, colorScheme: colorScheme)
             Rectangle().fill(fill).ignoresSafeArea()
-            VStack {
-                if !loading {
-                    title("Since Start of Year")
-                    VStack(alignment: .leading) {
-                        if vm.distanceSwimming > 0 {
-                            labelledValue(
-                                "Swimming Distance",
-                                vm.distanceSwimming
-                            )
-                        }
-                        if vm.distanceCycling > 0 {
-                            labelledValue(
-                                "Cycling Distance",
-                                vm.distanceCycling
-                            )
-                        }
-                        if vm.distanceWalkingRunning > 0 {
-                            labelledValue(
-                                "Walk+Run Distance",
-                                vm.distanceWalkingRunning
-                            )
-                        }
+            if !loading {
+                VStack {
+                    Picker("", selection: $statsKind) {
+                        Text(String(Date.now.year)).tag("year")
+                        Text("Past 7 Days").tag("week")
                     }
+                    .pickerStyle(.segmented)
+                    .padding(.bottom)
 
-                    Divider()
-
-                    title("Over Last 7 Days")
-                    VStack(alignment: .leading) {
-                        labelledValue("Heart Rate Average", vm.heartRate)
-                        labelledValue(
-                            "Resting Heart Rate Average",
-                            vm.restingHeartRate
-                        )
-                        labelledValue("Steps per day", vm.steps / 7)
-                        let active = vm.activeEnergyBurned / 7
-                        labelledValue("Active Calories burned per day", active)
-                        let basal = vm.basalEnergyBurned / 7
-                        labelledValue("Basal Calories burned per day", basal)
-                        labelledValue(
-                            "Total Calories burned per day",
-                            active + basal
-                        )
+                    if statsKind == "year" {
+                        statsForYear
+                    } else {
+                        statsForWeek
                     }
+                    Spacer()
                 }
+                .font(.headline)
+                .padding()
             }
-            .font(.headline)
-            .padding()
         }
         .task {
             loading = true
             await vm.load()
             loading = false
+
+            // This is for testing the ability to examine individual samples.
+            let manager = HealthKitManager()
+            let endDate = Date.now
+            let startDate = Calendar.current.date(
+                byAdding: DateComponents(day: -2),
+                to: endDate,
+                wrappingComponents: false
+            )!
+            let n = try? await manager.samples(
+                identifier: .distanceWalkingRunning,
+                unit: .mile(),
+                startDate: startDate,
+                endDate: endDate
+            )
         }
     }
 }

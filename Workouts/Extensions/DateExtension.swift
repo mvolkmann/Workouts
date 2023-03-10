@@ -26,4 +26,8 @@ extension Date {
             from: DateComponents(year: year, month: 1, day: 1)
         )!
     }
+
+    var year: Int {
+        Calendar.current.component(.year, from: self)
+    }
 }
