@@ -5,6 +5,7 @@ struct WorkoutsApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(ErrorViewModel())
         }
     }
 }

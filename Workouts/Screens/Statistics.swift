@@ -4,9 +4,15 @@ import SwiftUI
 
 struct Statistics: View {
     @AppStorage("preferKilometers") private var preferKilometers = false
+
     @Environment(\.colorScheme) private var colorScheme
+
+    @EnvironmentObject private var errorVM: ErrorViewModel
+
     @State private var loading = true
+    @State private var samples: [HKQuantitySample] = []
     @State private var statsKind = "year"
+
     @StateObject private var vm = HealthKitViewModel()
 
     private var distanceWalkingRunning: Int {
@@ -16,6 +22,21 @@ struct Statistics: View {
             Measurement(value: miles, unit: UnitLength.miles)
                 .converted(to: UnitLength.kilometers).value
         )
+    }
+
+    private func loadSamples(
+        identifier: HKQuantityTypeIdentifier,
+        unit: HKUnit
+    ) async {
+        do {
+            samples = try await weekSamples(identifier: identifier, unit: unit)
+        } catch {
+            samples = []
+            errorVM.alert(
+                error: error,
+                message: "Error loading HealthKit samples."
+            )
+        }
     }
 
     private var healthChart: some View {
@@ -137,23 +158,16 @@ struct Statistics: View {
             await vm.load()
             loading = false
 
-            do {
-                // let unit = HKUnit.mile()
-                let unit = HKUnit(from: "count/min")
-                let heartSamples = try await weekSamples(
-                    identifier: .heartRate,
-                    unit: unit
-                )
-                if let sample = heartSamples.first {
-                    print("Statistics: startDate =", sample.startDate)
-                    print("Statistics: endDate =", sample.endDate)
-                    let bpm = sample.quantity.doubleValue(for: unit)
-                    print("Statistics: bpm =", bpm)
-                }
-                // TODO: Use this data in healthChart above.
-            } catch {
-                print("Statistics: error getting heartRate samples")
+            // let unit = HKUnit.mile()
+            let unit = HKUnit(from: "count/min")
+            await loadSamples(identifier: .heartRate, unit: unit)
+            if let sample = samples.first {
+                print("Statistics: startDate =", sample.startDate)
+                print("Statistics: endDate =", sample.endDate)
+                let bpm = sample.quantity.doubleValue(for: unit)
+                print("Statistics: bpm =", bpm)
             }
+            // TODO: Use this data in healthChart above.
         }
     }
 }

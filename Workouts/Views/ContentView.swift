@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject private var errorVM: ErrorViewModel
+
     @FocusState private var isFocused: Bool
 
     @State private var appInfo: AppInfo?
@@ -84,7 +86,10 @@ struct ContentView: View {
             do {
                 appInfo = try await AppInfo.create()
             } catch {
-                Log.error("error getting AppInfo: \(error)")
+                errorVM.alert(
+                    error: error,
+                    message: "Error getting AppInfo."
+                )
             }
         }
 

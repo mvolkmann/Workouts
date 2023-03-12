@@ -1,7 +1,10 @@
 import HealthKit
+import SwiftUI
 
 @MainActor
 class HealthKitViewModel: ObservableObject {
+    @EnvironmentObject private var errorVM: ErrorViewModel
+
     // These values are the sum over the past seven days.
     @Published private(set) var activeEnergyBurned: Double = 0
     @Published private(set) var basalEnergyBurned: Double = 0
@@ -93,7 +96,10 @@ class HealthKitViewModel: ObservableObject {
                 endDate: endDate
             )
         } catch {
-            Log.error("error getting health data: \(error)")
+            errorVM.alert(
+                error: error,
+                message: "Error getting health data."
+            )
         }
     }
 }

@@ -10,6 +10,8 @@ struct Workout: View {
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.scenePhase) var scenePhase
 
+    @EnvironmentObject private var errorVM: ErrorViewModel
+
     @State private var calories = ""
     @State private var date = Date.now
     @State private var distance = ""
@@ -57,8 +59,10 @@ struct Workout: View {
                 message = "A \(workoutType) workout was added."
                 isShowingAlert = true
             } catch {
-                message = "Error adding workout: \(error)"
-                isShowingAlert = true
+                errorVM.alert(
+                    error: error,
+                    message: "Error adding workout."
+                )
             }
         }
     }
@@ -161,7 +165,7 @@ struct Workout: View {
         }
 
         .alert(
-            message.starts(with: "Error") ? "Error" : "Success",
+            "Success",
             isPresented: $isShowingAlert,
             actions: {},
             message: { Text(message) }

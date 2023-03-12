@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A1E8AD629BE45F200BAA531 /* ErrorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1E8AD529BE45F200BAA531 /* ErrorViewModel.swift */; };
 		1A41DB2729ABADA200CADFAF /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A41DB2629ABADA200CADFAF /* DateExtension.swift */; };
 		1A6ACC6F29ABDF09000ACEEB /* DurationPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A6ACC6E29ABDF09000ACEEB /* DurationPicker.swift */; };
 		1A88F9D829AFA1CD00DA89AA /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A88F9D729AFA1CD00DA89AA /* Utilities.swift */; };
@@ -28,6 +29,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1A1E8AD529BE45F200BAA531 /* ErrorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorViewModel.swift; sourceTree = "<group>"; };
 		1A41DB2629ABADA200CADFAF /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
 		1A6ACC6E29ABDF09000ACEEB /* DurationPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DurationPicker.swift; sourceTree = "<group>"; };
 		1A88F9D729AFA1CD00DA89AA /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
@@ -62,6 +64,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1A1E8AD329BE457700BAA531 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				1A90BCBF29AA9B160093D160 /* Log.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		1A1E8AD429BE45DB00BAA531 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				1A1E8AD529BE45F200BAA531 /* ErrorViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
 		1A90BCB429AA8B230093D160 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
@@ -122,7 +140,6 @@
 			children = (
 				1AAD5DFF295B503C00D40C2A /* WorkoutsApp.swift */,
 				1A90BCBD29AA9AA50093D160 /* AppInfo.swift */,
-				1A90BCBF29AA9B160093D160 /* Log.swift */,
 				1AAD5E12295B54F300D40C2A /* NumbersOnlyViewModifier.swift */,
 				1A88F9D729AFA1CD00DA89AA /* Utilities.swift */,
 				1AAD5E03295B503D00D40C2A /* Assets.xcassets */,
@@ -131,7 +148,9 @@
 				1A90BCC129AA9B370093D160 /* Extensions */,
 				1A90BCB529AA8C830093D160 /* HealthKit */,
 				1A90BCB429AA8B230093D160 /* Screens */,
+				1A1E8AD329BE457700BAA531 /* Services */,
 				1A90BCB629AA8CA60093D160 /* Views */,
+				1A1E8AD429BE45DB00BAA531 /* ViewModels */,
 				1AAD5E05295B503D00D40C2A /* Preview Content */,
 			);
 			path = Workouts;
@@ -224,6 +243,7 @@
 				1A88F9D829AFA1CD00DA89AA /* Utilities.swift in Sources */,
 				1A90BCBC29AA99710093D160 /* Info.swift in Sources */,
 				1AAD5E02295B503C00D40C2A /* ContentView.swift in Sources */,
+				1A1E8AD629BE45F200BAA531 /* ErrorViewModel.swift in Sources */,
 				1AAD5E11295B521B00D40C2A /* HealthKitManager.swift in Sources */,
 				1A90BCB829AA8CCD0093D160 /* WorkoutTypePicker.swift in Sources */,
 				1A90BCBA29AA92610093D160 /* Settings.swift in Sources */,
