@@ -9,14 +9,15 @@ struct Statistics: View {
 
     @EnvironmentObject private var errorVM: ErrorViewModel
 
+    @State private var chartInfo: ChartInfo?
+    @State private var data: [DatedValue] = []
     @State private var loading = true
-    @State private var samples: [HKQuantitySample] = []
     @State private var statsKind = "year"
 
-    @StateObject private var vm = HealthKitViewModel()
+    @StateObject private var vm = HealthKitViewModel.shared
 
     private var distanceWalkingRunning: Int {
-        let miles = vm.distanceWalkingRunning
+        let miles = vm.distanceWalkingRunning.reduce(0) { $0 + $1.value }
         guard preferKilometers else { return round(miles) }
         return round(
             Measurement(value: miles, unit: UnitLength.miles)
@@ -24,33 +25,32 @@ struct Statistics: View {
         )
     }
 
-    private func loadSamples(
-        identifier: HKQuantityTypeIdentifier,
-        unit: HKUnit
-    ) async {
-        do {
-            samples = try await weekSamples(identifier: identifier, unit: unit)
-        } catch {
-            samples = []
-            errorVM.alert(
-                error: error,
-                message: "Error loading HealthKit samples."
-            )
-        }
-    }
-
     private var healthChart: some View {
-        print("heartRate data =", vm.heartRate)
-        return Chart {
-            /*
-             ForEach(vm.heartRate, id: \.self) { data in
-             LineMark(
-             x: .value("Date", data.),
-             y: .value("Value", value)
-             )
-             .interpolationMethod(interpolationMethod)
-             }
-             */
+        VStack {
+            if let chartInfo {
+                Text(chartInfo.title).font(.headline)
+                Chart {
+                    // ForEach(data, id: \.self) { dataPoint in
+                    ForEach(data.indices, id: \.self) { index in
+                        let datedValue = data[index]
+
+                        switch chartInfo.type {
+                        case .bar:
+                            BarMark(
+                                x: .value("Date", datedValue.date),
+                                y: .value("Value", datedValue.value)
+                            )
+                            .interpolationMethod(.catmullRom)
+                        case .line:
+                            LineMark(
+                                x: .value("Date", datedValue.date),
+                                y: .value("Value", datedValue.value)
+                            )
+                            .interpolationMethod(.catmullRom)
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -63,19 +63,50 @@ struct Statistics: View {
         }
     }
 
+    /*
+     private func loadSamples(info: ChartInfo) async {
+         do {
+             let manager = HealthKitManager()
+             /*
+              statistics = try await manager.statistics(
+                  identifier: info.identifier,
+                  interval: info.interval,
+                  unit: info.unit,
+                  options: info.options,
+                  startDate: info.startDate,
+                  endDate: info.endDate
+              )
+              */
+             data = manager.getData(
+                 identifier: info.identifier,
+                 startDate: info.startDate,
+                 endDate: info.endDate,
+                 frequency: info.frequency,
+                 quantityFunction: info.quantityFunction
+             )
+         } catch {
+             statistics = []
+             errorVM.alert(
+                 error: error,
+                 message: "Error loading HealthKit samples."
+             )
+         }
+     }
+     */
+
     private func round(_ n: Double) -> Int { Int(n.rounded()) }
 
     private var statsForWeek: some View {
         VStack(alignment: .leading) {
-            labelledValue("Heart Rate Average", vm.heartRate)
+            labelledValue("Heart Rate Average", vm.heartRateAverage)
             labelledValue(
                 "Resting Heart Rate Average",
-                vm.restingHeartRate
+                vm.restingHeartRateAverage
             )
-            labelledValue("Steps per day", vm.steps / 7)
-            let active = vm.activeEnergyBurned / 7
+            labelledValue("Steps per day", vm.stepSum / 7)
+            let active = vm.activeEnergyBurnedSum / 7
             labelledValue("Active Calories burned per day", active)
-            let basal = vm.basalEnergyBurned / 7
+            let basal = vm.basalEnergyBurnedSum / 7
             labelledValue("Basal Calories burned per day", basal)
             labelledValue(
                 "Total Calories burned per day",
@@ -86,45 +117,25 @@ struct Statistics: View {
 
     private var statsForYear: some View {
         VStack(alignment: .leading) {
-            if vm.distanceSwimming > 0 {
+            if vm.distanceSwimmingSum > 0 {
                 labelledValue(
                     "Swimming Distance",
-                    vm.distanceSwimming
+                    vm.distanceSwimmingSum
                 )
             }
-            if vm.distanceCycling > 0 {
+            if vm.distanceCyclingSum > 0 {
                 labelledValue(
                     "Cycling Distance",
-                    vm.distanceCycling
+                    vm.distanceCyclingSum
                 )
             }
-            if vm.distanceWalkingRunning > 0 {
+            if vm.distanceWalkingRunningSum > 0 {
                 labelledValue(
                     "Walk+Run Distance",
-                    vm.distanceWalkingRunning
+                    vm.distanceWalkingRunningSum
                 )
             }
         }
-    }
-
-    private func weekSamples(
-        identifier: HKQuantityTypeIdentifier,
-        unit: HKUnit
-    ) async throws -> [HKQuantitySample] {
-        let manager = HealthKitManager()
-        let endDate = Date.now
-        let startDate = Calendar.current.date(
-            byAdding: DateComponents(day: -7),
-            to: endDate,
-            wrappingComponents: false // TODO: Why needed?
-        )!
-        let samples = try await manager.samples(
-            identifier: identifier,
-            unit: unit,
-            startDate: startDate,
-            endDate: endDate
-        )
-        return samples
     }
 
     var body: some View {
@@ -155,19 +166,19 @@ struct Statistics: View {
         }
         .task {
             loading = true
-            await vm.load()
-            loading = false
-
-            // let unit = HKUnit.mile()
-            let unit = HKUnit(from: "count/min")
-            await loadSamples(identifier: .heartRate, unit: unit)
-            if let sample = samples.first {
-                print("Statistics: startDate =", sample.startDate)
-                print("Statistics: endDate =", sample.endDate)
-                let bpm = sample.quantity.doubleValue(for: unit)
-                print("Statistics: bpm =", bpm)
+            defer {
+                Task { @MainActor in loading = false }
             }
-            // TODO: Use this data in healthChart above.
+
+            do {
+                // TODO: This code may need to move somewhere.
+                try await vm.load()
+            } catch {
+                errorVM.alert(
+                    error: error,
+                    message: "Error getting health data."
+                )
+            }
         }
     }
 }

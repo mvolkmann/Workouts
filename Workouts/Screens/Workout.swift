@@ -45,7 +45,7 @@ struct Workout: View {
                 // Need to convert Int32 to Int.
                 let caloriesNumber = Int((calories as NSString).intValue)
 
-                try await HealthKitManager().addWorkout(
+                try await HealthStore().addWorkout(
                     workoutType: workoutType,
                     startTime: startTime,
                     endTime: endTime,
