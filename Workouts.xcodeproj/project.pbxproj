@@ -8,10 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		1A1E8AD629BE45F200BAA531 /* ErrorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1E8AD529BE45F200BAA531 /* ErrorViewModel.swift */; };
-		1A1E8AD929BE536800BAA531 /* ChartInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1E8AD829BE536800BAA531 /* ChartInfo.swift */; };
 		1A1E8ADB29BE62B600BAA531 /* DatedValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1E8ADA29BE62B600BAA531 /* DatedValue.swift */; };
 		1A1E8ADD29BE62E700BAA531 /* Metrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1E8ADC29BE62E700BAA531 /* Metrics.swift */; };
-		1A1E8ADF29BE69F700BAA531 /* HealthChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1E8ADE29BE69F700BAA531 /* HealthChartView.swift */; };
 		1A1E8AE129BE6A6C00BAA531 /* HealthKitViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1E8AE029BE6A6C00BAA531 /* HealthKitViewModel.swift */; };
 		1A1E8AE329BE6AF100BAA531 /* ViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1E8AE229BE6AF100BAA531 /* ViewExtension.swift */; };
 		1A1E8AE529BE6C1A00BAA531 /* HealthStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1E8AE429BE6C1A00BAA531 /* HealthStore.swift */; };
@@ -30,17 +28,13 @@
 		1AAD5E02295B503C00D40C2A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD5E01295B503C00D40C2A /* ContentView.swift */; };
 		1AAD5E04295B503D00D40C2A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1AAD5E03295B503D00D40C2A /* Assets.xcassets */; };
 		1AAD5E07295B503D00D40C2A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1AAD5E06295B503D00D40C2A /* Preview Assets.xcassets */; };
-		1AAD5E0F295B51FD00D40C2A /* OldHealthKitViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD5E0E295B51FD00D40C2A /* OldHealthKitViewModel.swift */; };
-		1AAD5E11295B521B00D40C2A /* OldHealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD5E10295B521B00D40C2A /* OldHealthKitManager.swift */; };
 		1AAD5E13295B54F300D40C2A /* NumbersOnlyViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD5E12295B54F300D40C2A /* NumbersOnlyViewModifier.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		1A1E8AD529BE45F200BAA531 /* ErrorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorViewModel.swift; sourceTree = "<group>"; };
-		1A1E8AD829BE536800BAA531 /* ChartInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartInfo.swift; sourceTree = "<group>"; };
 		1A1E8ADA29BE62B600BAA531 /* DatedValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatedValue.swift; sourceTree = "<group>"; };
 		1A1E8ADC29BE62E700BAA531 /* Metrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Metrics.swift; sourceTree = "<group>"; };
-		1A1E8ADE29BE69F700BAA531 /* HealthChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthChartView.swift; sourceTree = "<group>"; };
 		1A1E8AE029BE6A6C00BAA531 /* HealthKitViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitViewModel.swift; sourceTree = "<group>"; };
 		1A1E8AE229BE6AF100BAA531 /* ViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtension.swift; sourceTree = "<group>"; };
 		1A1E8AE429BE6C1A00BAA531 /* HealthStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthStore.swift; sourceTree = "<group>"; };
@@ -61,8 +55,6 @@
 		1AAD5E03295B503D00D40C2A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1AAD5E06295B503D00D40C2A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		1AAD5E0D295B51E900D40C2A /* Workouts.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Workouts.entitlements; sourceTree = "<group>"; };
-		1AAD5E0E295B51FD00D40C2A /* OldHealthKitViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OldHealthKitViewModel.swift; sourceTree = "<group>"; };
-		1AAD5E10295B521B00D40C2A /* OldHealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OldHealthKitManager.swift; sourceTree = "<group>"; };
 		1AAD5E12295B54F300D40C2A /* NumbersOnlyViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumbersOnlyViewModifier.swift; sourceTree = "<group>"; };
 		1AAD5E14295B581400D40C2A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -81,6 +73,7 @@
 		1A1E8AD329BE457700BAA531 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				1A1E8AE429BE6C1A00BAA531 /* HealthStore.swift */,
 				1A90BCBF29AA9B160093D160 /* Log.swift */,
 			);
 			path = Services;
@@ -98,7 +91,6 @@
 		1A1E8AD729BE534A00BAA531 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				1A1E8AD829BE536800BAA531 /* ChartInfo.swift */,
 				1A1E8ADA29BE62B600BAA531 /* DatedValue.swift */,
 				1A1E8ADC29BE62E700BAA531 /* Metrics.swift */,
 			);
@@ -115,22 +107,11 @@
 			path = Screens;
 			sourceTree = "<group>";
 		};
-		1A90BCB529AA8C830093D160 /* HealthKit */ = {
-			isa = PBXGroup;
-			children = (
-				1AAD5E10295B521B00D40C2A /* OldHealthKitManager.swift */,
-				1AAD5E0E295B51FD00D40C2A /* OldHealthKitViewModel.swift */,
-				1A1E8AE429BE6C1A00BAA531 /* HealthStore.swift */,
-			);
-			path = HealthKit;
-			sourceTree = "<group>";
-		};
 		1A90BCB629AA8CA60093D160 /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				1AAD5E01295B503C00D40C2A /* ContentView.swift */,
 				1A6ACC6E29ABDF09000ACEEB /* DurationPicker.swift */,
-				1A1E8ADE29BE69F700BAA531 /* HealthChartView.swift */,
 				1A90BCBB29AA99710093D160 /* Info.swift */,
 				1A90BCB729AA8CCD0093D160 /* WorkoutTypePicker.swift */,
 			);
@@ -174,7 +155,6 @@
 				1AAD5E14295B581400D40C2A /* Info.plist */,
 				1AAD5E0D295B51E900D40C2A /* Workouts.entitlements */,
 				1A90BCC129AA9B370093D160 /* Extensions */,
-				1A90BCB529AA8C830093D160 /* HealthKit */,
 				1A1E8AD729BE534A00BAA531 /* Models */,
 				1A90BCB429AA8B230093D160 /* Screens */,
 				1A1E8AD329BE457700BAA531 /* Services */,
@@ -265,11 +245,8 @@
 			files = (
 				1AAD5E13295B54F300D40C2A /* NumbersOnlyViewModifier.swift in Sources */,
 				1A41DB2729ABADA200CADFAF /* DateExtension.swift in Sources */,
-				1A1E8AD929BE536800BAA531 /* ChartInfo.swift in Sources */,
-				1AAD5E0F295B51FD00D40C2A /* OldHealthKitViewModel.swift in Sources */,
 				1A90BCC029AA9B160093D160 /* Log.swift in Sources */,
 				1A90BCB329AA84630093D160 /* Workout.swift in Sources */,
-				1A1E8ADF29BE69F700BAA531 /* HealthChartView.swift in Sources */,
 				1A1E8AE529BE6C1A00BAA531 /* HealthStore.swift in Sources */,
 				1A90BCBE29AA9AA50093D160 /* AppInfo.swift in Sources */,
 				1A1E8ADD29BE62E700BAA531 /* Metrics.swift in Sources */,
@@ -278,7 +255,6 @@
 				1AAD5E02295B503C00D40C2A /* ContentView.swift in Sources */,
 				1A1E8ADB29BE62B600BAA531 /* DatedValue.swift in Sources */,
 				1A1E8AD629BE45F200BAA531 /* ErrorViewModel.swift in Sources */,
-				1AAD5E11295B521B00D40C2A /* OldHealthKitManager.swift in Sources */,
 				1A90BCB829AA8CCD0093D160 /* WorkoutTypePicker.swift in Sources */,
 				1A90BCBA29AA92610093D160 /* Settings.swift in Sources */,
 				1A1E8AE129BE6A6C00BAA531 /* HealthKitViewModel.swift in Sources */,
