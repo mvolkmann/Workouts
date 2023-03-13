@@ -75,6 +75,13 @@ struct ContentView: View {
             }
         }
 
+        .alert(
+            "Error",
+            isPresented: $errorVM.errorOccurred,
+            actions: {}, // no custom buttons
+            message: { errorVM.text }
+        )
+
         .sheet(isPresented: $isInfoPresented) {
             Info(appInfo: appInfo)
                 // .presentationDetents([.height(410)])
