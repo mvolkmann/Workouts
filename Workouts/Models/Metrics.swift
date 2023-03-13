@@ -61,24 +61,26 @@ class Metrics {
             unit: .largeCalorie(),
             frequency: .hour
         )
-        addMetricAverage(
-            name: "Body Fat %",
-            identifier: .bodyFatPercentage,
-            unit: .percent(),
-            lowerIsBetter: true
-        )
-        addMetricAverage(
-            name: "Weight",
-            identifier: .bodyMass,
-            unit: .pound(),
-            lowerIsBetter: true
-        )
-        addMetricAverage(
-            name: "Body Mass Index (BMI)",
-            identifier: .bodyMassIndex,
-            unit: .count(),
-            lowerIsBetter: true
-        )
+        /*
+          addMetricAverage(
+              name: "Body Fat %",
+              identifier: .bodyFatPercentage,
+              unit: .percent(),
+              lowerIsBetter: true
+          )
+          addMetricAverage(
+              name: "Weight",
+              identifier: .bodyMass,
+              unit: .pound(),
+              lowerIsBetter: true
+          )
+          addMetricAverage(
+              name: "Body Mass Index (BMI)",
+              identifier: .bodyMassIndex,
+              unit: .count(),
+              lowerIsBetter: true
+          )
+         */
         addMetricSum(
             name: "Distance Cycling",
             identifier: .distanceCycling,
@@ -89,11 +91,13 @@ class Metrics {
             identifier: .distanceWalkingRunning,
             unit: .mile()
         )
-        addMetricSum(
-            name: "Distance Wheelchair",
-            identifier: .distanceWheelchair,
-            unit: .mile()
-        )
+        /*
+          addMetricSum(
+              name: "Distance Wheelchair",
+              identifier: .distanceWheelchair,
+              unit: .mile()
+          )
+         */
         addMetricAverage(
             name: "Environmental Audio Exposure",
             identifier: .environmentalAudioExposure,
@@ -119,41 +123,45 @@ class Metrics {
             lowerIsBetter: true,
             decimalPlaces: 0
         )
-        addMetricAverage(
-            name: "Heart Rate Variability",
-            identifier: .heartRateVariabilitySDNN,
-            unit: HKUnit.secondUnit(with: .milli),
-            lowerIsBetter: true
-        )
-        addMetricAverage(
-            name: "Lean Body Mass",
-            identifier: .leanBodyMass,
-            unit: .pound(),
-            lowerIsBetter: true
-        )
-        addMetricSum(
-            name: "Number of Times Fallen",
-            identifier: .numberOfTimesFallen,
-            unit: .count(),
-            lowerIsBetter: true
-        )
+        /*
+           addMetricAverage(
+               name: "Heart Rate Variability",
+               identifier: .heartRateVariabilitySDNN,
+               unit: HKUnit.secondUnit(with: .milli),
+               lowerIsBetter: true
+           )
+           addMetricAverage(
+               name: "Lean Body Mass",
+               identifier: .leanBodyMass,
+               unit: .pound(),
+               lowerIsBetter: true
+           )
+           addMetricSum(
+               name: "Number of Times Fallen",
+               identifier: .numberOfTimesFallen,
+               unit: .count(),
+               lowerIsBetter: true
+           )
+         */
         addMetricAverage(
             name: "Oxygen Saturation %",
             identifier: .oxygenSaturation,
             unit: .percent()
         )
-        addMetricSum(
-            name: "Wheelchair Push Count",
-            identifier: .pushCount,
-            unit: .count(),
-            frequency: .hour
-        )
-        addMetricAverage(
-            name: "Respiratory Rate",
-            identifier: .respiratoryRate,
-            unit: HKUnit(from: "count/min"),
-            lowerIsBetter: true
-        )
+        /*
+           addMetricSum(
+               name: "Wheelchair Push Count",
+               identifier: .pushCount,
+               unit: .count(),
+               frequency: .hour
+           )
+          addMetricAverage(
+              name: "Respiratory Rate",
+              identifier: .respiratoryRate,
+              unit: HKUnit(from: "count/min"),
+              lowerIsBetter: true
+          )
+         */
         addMetricAverage(
             name: "Resting Heart Rate",
             identifier: .restingHeartRate,
@@ -161,12 +169,14 @@ class Metrics {
             lowerIsBetter: true,
             decimalPlaces: 0
         )
-        addMetricAverage(
-            name: "Six Minute Walk Test Distance",
-            identifier: .sixMinuteWalkTestDistance,
-            unit: .meter(),
-            decimalPlaces: 0
-        )
+        /*
+          addMetricAverage(
+              name: "Six Minute Walk Test Distance",
+              identifier: .sixMinuteWalkTestDistance,
+              unit: .meter(),
+              decimalPlaces: 0
+          )
+         */
         addMetricAverage(
             name: "Stair Ascent Speed",
             identifier: .stairAscentSpeed,
