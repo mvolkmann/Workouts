@@ -12,7 +12,7 @@ struct Statistics: View {
     @State private var chartType = "Line"
     @State private var data: [DatedValue] = []
     @State private var dateToValueMap: [String: Double] = [:]
-    @State private var frequency: Frequency = .day
+    @State private var frequency: Frequency = .hour
     @State private var metric = Metrics.shared.map[.heartRate]!
     @State private var selectedDate = ""
     @State private var selectedValue = 0.0
@@ -106,6 +106,22 @@ struct Statistics: View {
                         y: .value("Value", value)
                     )
                     .interpolationMethod(.catmullRom)
+
+                    /*
+                     PointMark(
+                         x: .value("Date", datedValue.date),
+                         y: .value("Value", value)
+                     )
+                     */
+
+                    // if !canScaleYAxis(metric: metric) {
+                    AreaMark(
+                        x: .value("Date", datedValue.date),
+                        y: .value("Value", value)
+                    )
+                    .foregroundStyle(.blue.opacity(0.2))
+                    .interpolationMethod(.catmullRom)
+                    // }
                 } else {
                     BarMark(
                         x: .value("Date", datedValue.date),
@@ -154,10 +170,8 @@ struct Statistics: View {
                 // This causes a crash for some metrics.
                 .chartYScale(domain: minValue ... maxValue)
 
-            // Stop AreaMarks from spilling outside chart.
-            // But this cuts off the bottom half
-            // of the bottom number on the y-axis!
-            // .clipShape(Rectangle())
+                // Stop AreaMarks from spilling outside chart.
+                .clipShape(Rectangle())
         }
 
         // Give the plot area a background color.
@@ -415,7 +429,8 @@ struct Statistics: View {
             case "24 Hours":
                 frequency = .hour
             case "1 Week":
-                frequency = .day
+                // frequency = .day
+                frequency = .hour
             case "1 Month":
                 frequency = .day
             case "3 Months":
