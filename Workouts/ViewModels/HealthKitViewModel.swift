@@ -1,6 +1,7 @@
 import HealthKit
 import SwiftUI
 
+@MainActor
 final class HealthKitViewModel: ObservableObject {
     // This is a singleton class.
     static let shared = HealthKitViewModel()

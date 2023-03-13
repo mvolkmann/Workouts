@@ -18,7 +18,8 @@ struct Settings: View {
 
         // This changes the font used by the segmented Picker below.
         UISegmentedControl.appearance().setTitleTextAttributes(
-            [.font: UIFont.systemFont(ofSize: 20, weight: .bold)],
+            // [.font: UIFont.systemFont(ofSize: 20, weight: .bold)],
+            [.font: UIFont.systemFont(ofSize: 14, weight: .bold)],
             for: .normal
         )
     }
