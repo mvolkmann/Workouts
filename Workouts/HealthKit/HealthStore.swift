@@ -373,7 +373,14 @@ class HealthStore {
         // granted all the requested permissions.
         try await store.requestAuthorization(
             // The app can update these.
-            toShare: [],
+            // TODO: Do these also need to be in the read array?
+            toShare: [
+                quantityType(.activeEnergyBurned),
+                quantityType(.distanceCycling),
+                // quantityType(.distanceDownhillSnowSports),
+                quantityType(.distanceSwimming),
+                quantityType(.distanceWalkingRunning),
+            ],
             // The app can read these.
             read: [
                 .activitySummaryType(),
@@ -407,7 +414,7 @@ class HealthStore {
 
                 quantityType(.distanceCycling),
                 // quantityType(.distanceDownhillSnowSports),
-                // quantityType(.distanceSwimming),
+                quantityType(.distanceSwimming),
                 quantityType(.distanceWalkingRunning),
 
                 // Not getting data due to not using wheelchair

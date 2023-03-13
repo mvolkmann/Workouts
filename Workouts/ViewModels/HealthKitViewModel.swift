@@ -70,24 +70,6 @@ final class HealthKitViewModel: ObservableObject {
 
     func load() async throws {
         let store = HealthStore()
-        try await store.authorize(
-            read: [
-                .activeEnergyBurned,
-                .basalEnergyBurned, // resting energy
-                .distanceCycling,
-                .distanceSwimming,
-                .distanceWalkingRunning,
-                .heartRate,
-                .restingHeartRate,
-                .stepCount,
-            ],
-            write: [
-                .activeEnergyBurned,
-                .distanceCycling,
-                .distanceSwimming,
-                .distanceWalkingRunning,
-            ]
-        )
 
         let endDate = Date.now
         let startDate = Calendar.current.date(

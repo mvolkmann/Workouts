@@ -258,22 +258,38 @@ struct Statistics: View {
                 Picker("", selection: $statsKind) {
                     Text(String(Date.now.year)).tag("year")
                     Text("Past 7 Days").tag("week")
+                    Text("Charts").tag("charts")
                 }
                 .pickerStyle(.segmented)
 
-                if statsKind == "year" {
+                switch statsKind {
+                case "year":
                     statsForYear.font(.title)
-                } else {
-                    healthChart
+                case "week":
                     statsForWeek.font(.headline)
+                case "charts":
+                    healthChart
+                default:
+                    EmptyView()
                 }
+
                 Spacer()
             }
             .padding()
         }
         .task {
             await HealthStore().requestPermission()
+
             loadData()
+
+            do {
+                try await vm.load()
+            } catch {
+                errorVM.alert(
+                    error: error,
+                    message: "Error loading health data."
+                )
+            }
         }
     }
 }
