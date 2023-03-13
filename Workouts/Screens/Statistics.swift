@@ -14,10 +14,28 @@ struct Statistics: View {
     @State private var dateToValueMap: [String: Double] = [:]
     @State private var frequency: Frequency = .day
     @State private var metric = Metrics.shared.map[.heartRate]!
+    @State private var selectedDate = ""
+    @State private var selectedValue = 0.0
     @State private var statsKind = "year"
     @State private var timeSpan = "1 Week"
 
     @StateObject private var vm = HealthKitViewModel.shared
+
+    private let unitMap: [HKUnit: String] = [
+        .count(): "count",
+        HKUnit(from: "count/min"): "beats per minute",
+        HKUnit(from: "ft/s"): "feet per second",
+        .hour(): "hours",
+        .largeCalorie(): "calories",
+        HKUnit(from: "m/s"): "meters per second",
+        .inch(): "inches",
+        .meter(): "meters",
+        .mile(): "miles",
+        HKUnit.secondUnit(with: .milli): "standard deviation in milliseconds",
+        .minute(): "minutes",
+        .percent(): "percentage",
+        .pound(): "pounds"
+    ]
 
     private func animateChart() {
         for index in data.indices {
@@ -34,6 +52,136 @@ struct Statistics: View {
                     data[index].animate = true
                 }
             }
+        }
+    }
+
+    private var annotation: some View {
+        VStack {
+            Text(dateDisplay)
+            Text(formattedValue)
+        }
+        .padding(5)
+        .background {
+            let fillColor: Color = colorScheme == .light ?
+                .white : Color(.secondarySystemBackground)
+            let myFill = fillColor.shadow(.drop(radius: 3))
+            RoundedRectangle(cornerRadius: 5, style: .continuous)
+                .fill(myFill)
+        }
+        .foregroundColor(Color(.label))
+    }
+
+    private func annotationPosition(_ index: Int) -> AnnotationPosition {
+        let percent = Double(index) / Double(data.count)
+        return percent < 0.1 ? .topTrailing :
+            percent > 0.95 ? .topLeading :
+            .top
+    }
+
+    private func canScaleYAxis(metric: Metric) -> Bool {
+        if chartType == "Bar" { return false }
+
+        if metric.unit == .percent() { return false }
+
+        // If the percent difference between the min and max values is very small,
+        // setting the y-axis to only go from min to max causes the app to crash.
+        let min = minValue
+        let percentDifference = (maxValue - min) / min
+        return percentDifference >= 0.1
+    }
+
+    private var chart: some View {
+        Chart {
+            // ForEach(data, id: \.self) { dataPoint in
+            ForEach(data.indices, id: \.self) { index in
+                let datedValue = data[index]
+
+                let multiplier = metric.unit == .percent() ? 100.0 : 1.0
+                let value = datedValue.animate ?
+                    datedValue.value * multiplier : 0.0
+
+                if chartType == "Line" {
+                    LineMark(
+                        x: .value("Date", datedValue.date),
+                        y: .value("Value", value)
+                    )
+                    .interpolationMethod(.catmullRom)
+                } else {
+                    BarMark(
+                        x: .value("Date", datedValue.date),
+                        y: .value("Value", value)
+                    )
+                    .interpolationMethod(.catmullRom)
+                }
+
+                if datedValue.date == selectedDate {
+                    RuleMark(x: .value("Date", selectedDate))
+                        .annotation(
+                            position: annotationPosition(index)
+                        ) {
+                            annotation
+                        }
+                        .foregroundStyle(.red)
+                        .lineStyle(.init(
+                            lineWidth: 1,
+                            dash: [10],
+                            dashPhase: 5
+                        ))
+                }
+            }
+        }
+
+        .frame(height: 300)
+
+        // Leave room for RuleMark annotations.
+        .padding(.horizontal, 20)
+        .padding(.top, 55)
+
+        .onAppear { animateChart() }
+
+        .chartLegend(.hidden)
+
+        // Support tapping on the plot area to see data point details.
+        .chartOverlay { proxy in chartOverlay(proxy: proxy) }
+
+        // Hide the x-axis and its labels.
+        // TODO: Can you only hide the labels?
+        .chartXAxis(.hidden)
+
+        .if(canScaleYAxis(metric: metric)) { view in
+            view
+                // Change the y-axis to begin at minValue and end at maxValue.
+                // This causes a crash for some metrics.
+                .chartYScale(domain: minValue ... maxValue)
+
+            // Stop AreaMarks from spilling outside chart.
+            // But this cuts off the bottom half
+            // of the bottom number on the y-axis!
+            // .clipShape(Rectangle())
+        }
+
+        // Give the plot area a background color.
+        .chartPlotStyle { content in
+            content.background(Color(.secondarySystemBackground))
+        }
+    }
+
+    private func chartOverlay(proxy: ChartProxy) -> some View {
+        GeometryReader { _ in
+            Rectangle()
+                .fill(.clear)
+                .contentShape(Rectangle())
+                .gesture(
+                    DragGesture()
+                        .onChanged { value in
+                            let location = value.location
+                            if let date: String = proxy.value(atX: location.x) {
+                                selectedDate = date
+                                selectedValue = dateToValueMap[date] ?? 0.0
+                            }
+                        }
+                        .onEnded { _ in selectedDate = "" }
+                )
         }
     }
 
@@ -59,6 +207,12 @@ struct Statistics: View {
         }
     }
 
+    private var dateDisplay: String {
+        if timeSpan == "1 Day" { return selectedDate }
+        let parts = selectedDate.components(separatedBy: " ")
+        return parts.first ?? selectedDate
+    }
+
     private var distanceWalkingRunning: Int {
         let miles = vm.distanceWalkingRunning.reduce(0) { $0 + $1.value }
         guard preferKilometers else { return round(miles) }
@@ -68,31 +222,38 @@ struct Statistics: View {
         )
     }
 
+    private var formattedValue: String {
+        let intUnits: [HKUnit] = [.count(), .largeCalorie()]
+        if intUnits.contains(metric.unit) {
+            let numberFormatter = NumberFormatter()
+            numberFormatter.numberStyle = .decimal
+            let value = Int(selectedValue)
+            return numberFormatter.string(from: NSNumber(value: value))!
+        }
+
+        let format = "%.\(sd(metric.decimalPlaces))f"
+        let isPercent = metric.unit == .percent()
+        let value = isPercent ? selectedValue * 100 : selectedValue
+        return String(format: format, value) + (isPercent ? "%" : "")
+    }
+
     private var healthChart: some View {
         VStack {
             metricPicker
             timeSpanPicker
             chartTypePicker
 
-            Chart {
-                // ForEach(data, id: \.self) { dataPoint in
-                ForEach(data.indices, id: \.self) { index in
-                    let datedValue = data[index]
-
-                    if chartType == "Line" {
-                        LineMark(
-                            x: .value("Date", datedValue.date),
-                            y: .value("Value", datedValue.value)
-                        )
-                        .interpolationMethod(.catmullRom)
-                    } else {
-                        BarMark(
-                            x: .value("Date", datedValue.date),
-                            y: .value("Value", datedValue.value)
-                        )
-                        .interpolationMethod(.catmullRom)
-                    }
-                }
+            Text(title).fontWeight(.bold)
+            Text(metricName)
+            // Text("values go from \(minValue) to \(maxValue)")
+            if data.count == 0 {
+                Text(
+                    "No data was found for this metric and time span. " +
+                        "Perhaps you did not grant access to all health data."
+                )
+                .padding(.top)
+            } else {
+                chart
             }
         }
     }
@@ -107,7 +268,6 @@ struct Statistics: View {
     }
 
     private func loadData() {
-        print("\(#fileID) \(#function) entered")
         Task {
             do {
                 let newData = try await HealthStore().getData(
@@ -115,14 +275,12 @@ struct Statistics: View {
                     startDate: startDate,
                     frequency: frequency
                 ) { data in
-                    print("\(#fileID) \(#function) data =", data)
-                    return metric.option == .cumulativeSum ?
+                    metric.option == .cumulativeSum ?
                         data.sumQuantity() :
                         data.averageQuantity()
                 }
                 // All objects in data will now have "animate" set to false.
 
-                print("\(#fileID) \(#function) newData =", newData)
                 dateToValueMap = [:]
                 for item in newData {
                     dateToValueMap[item.date] = item.value
@@ -139,6 +297,18 @@ struct Statistics: View {
         }
     }
 
+    private var maxValue: Double {
+        let item = data.max { $0.value < $1.value }
+        return item?.value ?? 0.0
+    }
+
+    private var metricName: String {
+        if metric.identifier == .respiratoryRate {
+            return "breaths per minute"
+        }
+        return unitMap[metric.unit] ?? metric.unit.unitString
+    }
+
     private var metricPicker: some View {
         HStack {
             Text("Metric").fontWeight(.bold)
@@ -150,6 +320,11 @@ struct Statistics: View {
             Spacer()
         }
         .onChange(of: metric) { _ in loadData() }
+    }
+
+    private var minValue: Double {
+        let item = data.min { $0.value < $1.value }
+        return item?.value ?? 0.0
     }
 
     private func picker(
@@ -185,7 +360,7 @@ struct Statistics: View {
     }
 
     private var statsForWeek: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 20) {
             labelledValue("Heart Rate Average", vm.heartRateAverage)
             labelledValue(
                 "Resting Heart Rate Average",
@@ -201,6 +376,8 @@ struct Statistics: View {
                 active + basal
             )
         }
+        .font(.headline)
+        .padding(.top)
     }
 
     private var statsForYear: some View {
@@ -224,6 +401,7 @@ struct Statistics: View {
                 )
             }
         }
+        .font(.title)
     }
 
     private var timeSpanPicker: some View {
@@ -250,6 +428,28 @@ struct Statistics: View {
         }
     }
 
+    private var title: String {
+        if metric.identifier == .bodyMass { return "Weight" }
+        if metric.identifier == .vo2Max { return "VO2 Max" }
+
+        var text = metric.identifier.rawValue
+
+        // Remove metric prefix.
+        let prefix = "HKQuantityTypeIdentifier"
+        if text.starts(with: prefix) {
+            text = text[prefix.count...]
+        }
+
+        // Add a space before all uppercase characters except the first.
+        var result = text[0]
+        for char in text.dropFirst() {
+            if char.isUppercase { result += " " }
+            result.append(char)
+        }
+
+        return result
+    }
+
     var body: some View {
         ZStack {
             let fill = gradient(.yellow, colorScheme: colorScheme)
@@ -264,9 +464,9 @@ struct Statistics: View {
 
                 switch statsKind {
                 case "year":
-                    statsForYear.font(.title)
+                    statsForYear
                 case "week":
-                    statsForWeek.font(.headline)
+                    statsForWeek
                 case "charts":
                     healthChart
                 default:
