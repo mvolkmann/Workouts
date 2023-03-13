@@ -208,7 +208,7 @@ struct Statistics: View {
     }
 
     private var dateDisplay: String {
-        if timeSpan == "1 Day" { return selectedDate }
+        if timeSpan == "24 Hours" { return selectedDate }
         let parts = selectedDate.components(separatedBy: " ")
         return parts.first ?? selectedDate
     }
@@ -345,7 +345,7 @@ struct Statistics: View {
 
     private var startDate: Date {
         let today = Date().withoutTime
-        return timeSpan == "1 Day" ? today.yesterday :
+        return timeSpan == "24 Hours" ? today.yesterday :
             timeSpan == "1 Week" ? today.daysBefore(7) :
             timeSpan == "1 Month" ? today.monthsBefore(1) :
             timeSpan == "3 Months" ? today.monthsBefore(3) :
@@ -407,12 +407,12 @@ struct Statistics: View {
     private var timeSpanPicker: some View {
         picker(
             label: "Time Span",
-            values: ["1 Day", "1 Week", "1 Month", "3 Months"],
+            values: ["24 Hours", "1 Week", "1 Month", "3 Months"],
             selected: $timeSpan
         )
         .onChange(of: timeSpan) { _ in
             switch timeSpan {
-            case "1 Day":
+            case "24 Hours":
                 frequency = .hour
             case "1 Week":
                 frequency = .day
