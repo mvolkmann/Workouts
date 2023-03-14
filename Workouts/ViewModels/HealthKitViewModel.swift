@@ -59,8 +59,7 @@ final class HealthKitViewModel: ObservableObject {
         let endDate = Date.now
         let startDate = Calendar.current.date(
             byAdding: DateComponents(day: -7),
-            to: endDate,
-            wrappingComponents: false
+            to: endDate
         )!
 
         activeEnergyBurnedSum = try await store.sum(
