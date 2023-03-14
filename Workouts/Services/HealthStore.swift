@@ -360,8 +360,8 @@ class HealthStore {
                 quantityType(.distanceCycling),
                 // quantityType(.distanceDownhillSnowSports),
                 quantityType(.distanceSwimming),
-                quantityType(.distanceWalkingRunning),
-                HKWorkoutType.workoutType()
+                quantityType(.distanceWalkingRunning)
+                // HKWorkoutType.workoutType()
             ],
             // The app can read these.
             read: [
