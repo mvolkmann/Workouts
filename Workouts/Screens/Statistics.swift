@@ -49,7 +49,9 @@ struct Statistics: View {
                     dampingFraction: spring,
                     blendDuration: spring
                 )) {
-                    data[index].animate = true
+                    if index < data.count {
+                        data[index].animate = true
+                    }
                 }
             }
         }
@@ -493,8 +495,6 @@ struct Statistics: View {
             .padding()
         }
         .task {
-            await HealthStore().requestPermission()
-
             loadData()
 
             do {

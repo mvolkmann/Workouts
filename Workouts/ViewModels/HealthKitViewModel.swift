@@ -24,7 +24,6 @@ final class HealthKitViewModel: ObservableObject {
     // This is the same as "Resting Energy".
     @Published private(set) var basalEnergyBurned: [DatedValue] = []
     @Published private(set) var basalEnergyBurnedSum = 0.0
-    @Published private(set) var bodyMass: [DatedValue] = []
     @Published private(set) var bpmAverage = 0.0
     @Published private(set) var distanceCycling: [DatedValue] = []
     @Published private(set) var distanceCyclingSum = 0.0
@@ -34,27 +33,15 @@ final class HealthKitViewModel: ObservableObject {
     @Published private(set) var distanceWheelchair: [DatedValue] = []
     @Published private(set) var environmentalAudioExposure: [DatedValue] = []
     @Published private(set) var flightsClimbed: [DatedValue] = []
-    @Published private(set) var haveSleepData = false
     @Published private(set) var headphoneAudioExposure: [DatedValue] = []
     @Published private(set) var heartRate: [DatedValue] = []
     @Published private(set) var heartRateAverage = 0.0
-    // SDNN stands for Standard Deviation of Normal Normal? (NN) intervals.
-    @Published private(set) var heartRateVariabilitySDNN: [DatedValue] = []
-    @Published private(set) var highHeartRateEvents: [DatedValue] = []
-    @Published private(set) var irregularHeartRhythmEvents: [DatedValue] = []
-    @Published private(set) var leanBodyMass: [DatedValue] = []
-    @Published private(set) var lowHeartRateEvents: [DatedValue] = []
     @Published private(set) var numberOfTimesFallen: [DatedValue] = []
-    @Published private(set) var oxygenSaturation: [DatedValue] = []
     @Published private(set) var pushCount: [DatedValue] = []
     @Published private(set) var respiratoryRate: [DatedValue] = []
     @Published private(set) var restingHeartRate: [DatedValue] = []
     @Published private(set) var restingHeartRateAverage = 0.0
-    @Published private(set) var sixMinuteWalkTestDistance: [DatedValue] = []
     @Published private(set) var sleepDuration: [DatedValue] = []
-    @Published private(set) var sleepInterruptionCount: [DatedValue] = []
-    @Published private(set) var sleepInterruptionDuration: [DatedValue] = []
-    @Published private(set) var sleepScore: [DatedValue] = []
     @Published private(set) var stairAscentSpeed: [DatedValue] = []
     @Published private(set) var stairDescentSpeed: [DatedValue] = []
     @Published private(set) var stepCount: [DatedValue] = []
@@ -63,9 +50,7 @@ final class HealthKitViewModel: ObservableObject {
     @Published private(set) var walkingAsymmetryPercentage: [DatedValue] = []
     @Published private(set) var walkingDoubleSupportPercentage: [DatedValue] =
         []
-    @Published private(set) var walkingHeartRateAverage: [DatedValue] = []
     @Published private(set) var walkingSpeed: [DatedValue] = []
-    @Published private(set) var walkingSteadiness: [DatedValue] = []
     @Published private(set) var walkingStepLength: [DatedValue] = []
 
     func load() async throws {

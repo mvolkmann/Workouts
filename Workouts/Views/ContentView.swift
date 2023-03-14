@@ -90,6 +90,8 @@ struct ContentView: View {
         }
 
         .task {
+            await HealthStore().requestAuthorization()
+
             do {
                 appInfo = try await AppInfo.create()
             } catch {

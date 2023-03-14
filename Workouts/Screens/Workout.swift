@@ -36,23 +36,14 @@ struct Workout: View {
     }
 
     private func addWorkout() {
-        print("\(#fileID) \(#function) entered")
         Task {
             do {
                 // HealthKit seems to round down to the nearest tenth.
                 // For example, 20.39 becomes 20.3.
                 // Adding 0.05 causes it to round to the nearest tenth.
                 let distanceNumber = (distance as NSString).doubleValue + 0.05
-                print(
-                    "\(#fileID) \(#function) distanceNumber =",
-                    distanceNumber
-                )
                 // Need to convert Int32 to Int.
                 let caloriesNumber = Int((calories as NSString).intValue)
-                print(
-                    "\(#fileID) \(#function) caloriesNumber =",
-                    caloriesNumber
-                )
 
                 try await HealthStore().addWorkout(
                     workoutType: workoutType,
@@ -67,9 +58,7 @@ struct Workout: View {
                 calories = defaultCalories
                 message = "A \(workoutType) workout was added."
                 isShowingAlert = true
-                print("\(#fileID) \(#function) message =", message)
             } catch {
-                print("GOT ERROR:", error)
                 errorVM.alert(
                     error: error,
                     message: "Error adding workout."
