@@ -95,25 +95,6 @@ class HealthStore {
         try await store.addSamples(samples, to: workout)
     }
 
-    func authorize(
-        read: [HKQuantityTypeIdentifier],
-        write: [HKQuantityTypeIdentifier]
-    ) async throws {
-        let readSet: Set<HKSampleType> = Set(
-            read.map { .quantityType(forIdentifier: $0)! }
-        )
-
-        var writeSet: Set<HKSampleType> = Set(
-            write.map { .quantityType(forIdentifier: $0)! }
-        )
-        writeSet.insert(HKWorkoutType.workoutType())
-
-        try await store.requestAuthorization(
-            toShare: writeSet,
-            read: readSet
-        )
-    }
-
     func average(
         identifier: HKQuantityTypeIdentifier,
         unit: HKUnit,
@@ -380,6 +361,7 @@ class HealthStore {
                 // quantityType(.distanceDownhillSnowSports),
                 quantityType(.distanceSwimming),
                 quantityType(.distanceWalkingRunning),
+                HKWorkoutType.workoutType()
             ],
             // The app can read these.
             read: [
