@@ -32,15 +32,6 @@ extension Date {
         Calendar.current.date(from: dateComponents)
     }
 
-    static func from(year: Int, month: Int, day: Int) -> Date? {
-        // swiftlint:disable identifier_name
-        var dc = DateComponents()
-        dc.year = year
-        dc.month = month
-        dc.day = day
-        return Date.from(dateComponents: dc)
-    }
-
     static func from(ms: Int) -> Date {
         Date(timeIntervalSince1970: TimeInterval(ms / 1000))
     }

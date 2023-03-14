@@ -12,7 +12,7 @@ final class HealthKitViewModel: ObservableObject {
 
     static let addZeros: Set<HKQuantityTypeIdentifier> = [
         .distanceCycling, .distanceWalkingRunning, .distanceWheelchair,
-        .numberOfTimesFallen, .pushCount, .stepCount
+        .pushCount, .stepCount
     ]
 
     // MARK: - Properties
@@ -36,7 +36,6 @@ final class HealthKitViewModel: ObservableObject {
     @Published private(set) var headphoneAudioExposure: [DatedValue] = []
     @Published private(set) var heartRate: [DatedValue] = []
     @Published private(set) var heartRateAverage = 0.0
-    @Published private(set) var numberOfTimesFallen: [DatedValue] = []
     @Published private(set) var pushCount: [DatedValue] = []
     @Published private(set) var respiratoryRate: [DatedValue] = []
     @Published private(set) var restingHeartRate: [DatedValue] = []

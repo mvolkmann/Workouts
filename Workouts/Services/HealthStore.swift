@@ -95,6 +95,48 @@ class HealthStore {
         try await store.addSamples(samples, to: workout)
     }
 
+    private func addZeros(
+        datedValues: inout [DatedValue],
+        frequency: Frequency? = nil
+    ) {
+        for index in 0 ..< datedValues.count - 1 {
+            let current = datedValues[index]
+            let next = datedValues[index + 1]
+            let currentDate = Date.from(ms: current.ms)
+            let nextDate = Date.from(ms: next.ms)
+
+            if frequency == .hour {
+                let missing = currentDate.hoursBetween(date: nextDate) - 1
+                if missing > 0 {
+                    for delta in 1 ... missing {
+                        let date = currentDate.hoursAfter(delta)
+                        let datedValue = DatedValue(
+                            date: date.ymdh,
+                            ms: date.milliseconds,
+                            unit: current.unit,
+                            value: 0.0
+                        )
+                        datedValues.insert(datedValue, at: index + delta)
+                    }
+                }
+            } else if frequency == .day {
+                let missing = currentDate.daysBetween(date: nextDate) - 1
+                if missing > 0 {
+                    for delta in 1 ... missing {
+                        let date = currentDate.daysAfter(delta)
+                        let datedValue = DatedValue(
+                            date: date.ymd,
+                            ms: date.milliseconds,
+                            unit: current.unit,
+                            value: 0.0
+                        )
+                        datedValues.insert(datedValue, at: index + delta)
+                    }
+                }
+            }
+        }
+    }
+
     func average(
         identifier: HKQuantityTypeIdentifier,
         unit: HKUnit,
@@ -193,42 +235,7 @@ class HealthStore {
 
         if !datedValues.isEmpty,
            HealthKitViewModel.addZeros.contains(identifier) {
-            for index in 0 ..< datedValues.count - 1 {
-                let current = datedValues[index]
-                let next = datedValues[index + 1]
-                let currentDate = Date.from(ms: current.ms)
-                let nextDate = Date.from(ms: next.ms)
-
-                if frequency == .hour {
-                    let missing = currentDate.hoursBetween(date: nextDate) - 1
-                    if missing > 0 {
-                        for delta in 1 ... missing {
-                            let date = currentDate.hoursAfter(delta)
-                            let datedValue = DatedValue(
-                                date: date.ymdh,
-                                ms: date.milliseconds,
-                                unit: current.unit,
-                                value: 0.0
-                            )
-                            datedValues.insert(datedValue, at: index + delta)
-                        }
-                    }
-                } else if frequency == .day {
-                    let missing = currentDate.daysBetween(date: nextDate) - 1
-                    if missing > 0 {
-                        for delta in 1 ... missing {
-                            let date = currentDate.daysAfter(delta)
-                            let datedValue = DatedValue(
-                                date: date.ymd,
-                                ms: date.milliseconds,
-                                unit: current.unit,
-                                value: 0.0
-                            )
-                            datedValues.insert(datedValue, at: index + delta)
-                        }
-                    }
-                }
-            }
+            addZeros(datedValues: &datedValues, frequency: frequency)
         }
 
         return datedValues
