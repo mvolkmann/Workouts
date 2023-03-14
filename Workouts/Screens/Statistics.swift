@@ -14,6 +14,7 @@ struct Statistics: View {
     @State private var dateToValueMap: [String: Double] = [:]
     @State private var frequency: Frequency = .hour
     @State private var metric = Metrics.shared.map[.heartRate]!
+    @State private var runningMiles = 0.0
     @State private var selectedDate = ""
     @State private var selectedValue = 0.0
     @State private var statsKind = "year"
@@ -313,6 +314,55 @@ struct Statistics: View {
         }
     }
 
+    private func loadRunningMiles() {
+        runningMiles = 0.0
+
+        let store = HKHealthStore()
+
+        let endDate = Date.now
+        let workoutDate = HKQuery.predicateForWorkoutActivities(
+            start: endDate.startOfYear,
+            end: endDate
+        )
+
+        let workouts = HKQuery.predicateForWorkouts(
+            activityPredicate: workoutDate
+        )
+
+        let query = HKSampleQuery(
+            sampleType: .workoutType(),
+            predicate: workouts,
+            limit: HKObjectQueryNoLimit,
+            sortDescriptors: nil
+        ) { _, samples, error in
+            if let error {
+                errorVM.alert(
+                    error: error,
+                    message: "Error loading health data."
+                )
+                return
+            }
+
+            guard let workouts = samples as? [HKWorkout] else { return }
+
+            var miles = 0.0
+            for workout in workouts {
+                if workout.workoutActivityType == .running {
+                    let quantityType = HKQuantityType(.distanceWalkingRunning)
+                    let distance = workout.statistics(for: quantityType)?
+                        .sumQuantity()
+                    if let distance {
+                        miles += distance.doubleValue(for: .mile())
+                    }
+                }
+            }
+
+            runningMiles = miles
+        }
+
+        store.execute(query)
+    }
+
     private var maxValue: Double {
         let item = data.max { $0.value < $1.value }
         return item?.value ?? 0.0
@@ -406,13 +456,16 @@ struct Statistics: View {
             }
             if vm.distanceCyclingSum > 0 {
                 labelledValue(
-                    "Cycling Distance",
+                    "Cycling Miles",
                     vm.distanceCyclingSum
                 )
             }
+            if runningMiles > 0 {
+                labelledValue("Running Miles", runningMiles)
+            }
             if vm.distanceWalkingRunningSum > 0 {
                 labelledValue(
-                    "Walk+Run Distance",
+                    "Walk+Run Miles",
                     vm.distanceWalkingRunningSum
                 )
             }
@@ -495,6 +548,7 @@ struct Statistics: View {
             .padding()
         }
         .task {
+            loadRunningMiles()
             loadData()
 
             do {
