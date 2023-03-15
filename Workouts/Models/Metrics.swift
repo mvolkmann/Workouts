@@ -1,9 +1,5 @@
 import HealthKit
 
-enum Frequency {
-    case minute, hour, day, week
-}
-
 struct Metric: Hashable, Identifiable {
     let name: String
     let identifier: HKQuantityTypeIdentifier

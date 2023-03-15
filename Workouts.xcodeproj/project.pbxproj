@@ -24,6 +24,10 @@
 		1A90BCBE29AA9AA50093D160 /* AppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A90BCBD29AA9AA50093D160 /* AppInfo.swift */; };
 		1A90BCC029AA9B160093D160 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A90BCBF29AA9B160093D160 /* Log.swift */; };
 		1A90BCC329AA9B420093D160 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A90BCC229AA9B420093D160 /* StringExtension.swift */; };
+		1A95EFCF29C21C9A00282232 /* ChartDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A95EFCE29C21C9A00282232 /* ChartDetail.swift */; };
+		1A95EFD129C21E9400282232 /* Frequency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A95EFD029C21E9400282232 /* Frequency.swift */; };
+		1A95EFD329C21EB500282232 /* TimeSpan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A95EFD229C21EB500282232 /* TimeSpan.swift */; };
+		1A95EFD529C21ED900282232 /* ChartType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A95EFD429C21ED900282232 /* ChartType.swift */; };
 		1AAD5E00295B503C00D40C2A /* WorkoutsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD5DFF295B503C00D40C2A /* WorkoutsApp.swift */; };
 		1AAD5E02295B503C00D40C2A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD5E01295B503C00D40C2A /* ContentView.swift */; };
 		1AAD5E04295B503D00D40C2A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1AAD5E03295B503D00D40C2A /* Assets.xcassets */; };
@@ -49,6 +53,10 @@
 		1A90BCBD29AA9AA50093D160 /* AppInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfo.swift; sourceTree = "<group>"; };
 		1A90BCBF29AA9B160093D160 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		1A90BCC229AA9B420093D160 /* StringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
+		1A95EFCE29C21C9A00282232 /* ChartDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartDetail.swift; sourceTree = "<group>"; };
+		1A95EFD029C21E9400282232 /* Frequency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Frequency.swift; sourceTree = "<group>"; };
+		1A95EFD229C21EB500282232 /* TimeSpan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSpan.swift; sourceTree = "<group>"; };
+		1A95EFD429C21ED900282232 /* ChartType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartType.swift; sourceTree = "<group>"; };
 		1AAD5DFC295B503C00D40C2A /* Workouts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Workouts.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AAD5DFF295B503C00D40C2A /* WorkoutsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutsApp.swift; sourceTree = "<group>"; };
 		1AAD5E01295B503C00D40C2A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -91,8 +99,12 @@
 		1A1E8AD729BE534A00BAA531 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				1A95EFCE29C21C9A00282232 /* ChartDetail.swift */,
+				1A95EFD429C21ED900282232 /* ChartType.swift */,
 				1A1E8ADA29BE62B600BAA531 /* DatedValue.swift */,
+				1A95EFD029C21E9400282232 /* Frequency.swift */,
 				1A1E8ADC29BE62E700BAA531 /* Metrics.swift */,
+				1A95EFD229C21EB500282232 /* TimeSpan.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -249,16 +261,20 @@
 				1A90BCB329AA84630093D160 /* Workout.swift in Sources */,
 				1A1E8AE529BE6C1A00BAA531 /* HealthStore.swift in Sources */,
 				1A90BCBE29AA9AA50093D160 /* AppInfo.swift in Sources */,
+				1A95EFD529C21ED900282232 /* ChartType.swift in Sources */,
 				1A1E8ADD29BE62E700BAA531 /* Metrics.swift in Sources */,
 				1A88F9D829AFA1CD00DA89AA /* Utilities.swift in Sources */,
+				1A95EFD129C21E9400282232 /* Frequency.swift in Sources */,
 				1A90BCBC29AA99710093D160 /* Info.swift in Sources */,
 				1AAD5E02295B503C00D40C2A /* ContentView.swift in Sources */,
 				1A1E8ADB29BE62B600BAA531 /* DatedValue.swift in Sources */,
 				1A1E8AD629BE45F200BAA531 /* ErrorViewModel.swift in Sources */,
 				1A90BCB829AA8CCD0093D160 /* WorkoutTypePicker.swift in Sources */,
+				1A95EFCF29C21C9A00282232 /* ChartDetail.swift in Sources */,
 				1A90BCBA29AA92610093D160 /* Settings.swift in Sources */,
 				1A1E8AE129BE6A6C00BAA531 /* HealthKitViewModel.swift in Sources */,
 				1A90BCB129AA84340093D160 /* Statistics.swift in Sources */,
+				1A95EFD329C21EB500282232 /* TimeSpan.swift in Sources */,
 				1A1E8AE329BE6AF100BAA531 /* ViewExtension.swift in Sources */,
 				1A6ACC6F29ABDF09000ACEEB /* DurationPicker.swift in Sources */,
 				1A90BCC329AA9B420093D160 /* StringExtension.swift in Sources */,

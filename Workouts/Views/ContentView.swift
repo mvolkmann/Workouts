@@ -95,10 +95,13 @@ struct ContentView: View {
             do {
                 appInfo = try await AppInfo.create()
             } catch {
-                errorVM.alert(
-                    error: error,
-                    message: "Error getting AppInfo."
-                )
+                Log.error("Failed to get AppInfo.")
+                /*
+                 errorVM.alert(
+                     error: error,
+                     message: "Failed to get AppInfo."
+                 )
+                 */
             }
         }
 

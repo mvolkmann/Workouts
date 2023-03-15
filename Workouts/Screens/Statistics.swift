@@ -9,7 +9,7 @@ struct Statistics: View {
 
     @EnvironmentObject private var errorVM: ErrorViewModel
 
-    @State private var chartType = "Line"
+    @State private var chartType: ChartType = .line
     @State private var data: [DatedValue] = []
     @State private var dateToValueMap: [String: Double] = [:]
     @State private var frequency: Frequency = .hour
@@ -18,7 +18,7 @@ struct Statistics: View {
     @State private var selectedDate = ""
     @State private var selectedValue = 0.0
     @State private var statsKind = "year"
-    @State private var timeSpan = "1 Week"
+    @State private var timeSpan: TimeSpan = .week
 
     @StateObject private var vm = HealthKitViewModel.shared
 
@@ -82,7 +82,7 @@ struct Statistics: View {
     }
 
     private func canScaleYAxis(metric: Metric) -> Bool {
-        if chartType == "Bar" { return false }
+        if chartType == .bar { return false }
 
         if metric.unit == .percent() { return false }
 
@@ -103,7 +103,7 @@ struct Statistics: View {
                 let value = datedValue.animate ?
                     datedValue.value * multiplier : 0.0
 
-                if chartType == "Line" {
+                if chartType == .line {
                     LineMark(
                         x: .value("Date", datedValue.date),
                         y: .value("Value", value)
@@ -203,11 +203,15 @@ struct Statistics: View {
     }
 
     private var chartTypePicker: some View {
-        picker(
-            label: "Chart Type",
-            values: ["Bar", "Line"],
-            selected: $chartType
-        )
+        VStack(alignment: .leading, spacing: 0) {
+            Text("Chart Type").fontWeight(.bold)
+            Picker("", selection: $chartType) {
+                ForEach(ChartType.allCases, id: \.self) {
+                    Text($0.rawValue).tag($0)
+                }
+            }
+            .pickerStyle(.segmented)
+        }
         .onChange(of: chartType) { _ in
             // Make a copy of data where "animate" is false in each item.
             // This allows the new chart to be animated.
@@ -225,7 +229,7 @@ struct Statistics: View {
     }
 
     private var dateDisplay: String {
-        if timeSpan == "24 Hours" { return selectedDate }
+        if timeSpan == .day { return selectedDate }
         let parts = selectedDate.components(separatedBy: " ")
         return parts.first ?? selectedDate
     }
@@ -393,28 +397,14 @@ struct Statistics: View {
         return item?.value ?? 0.0
     }
 
-    private func picker(
-        label: String,
-        values: [String],
-        selected: Binding<String>
-    ) -> some View {
-        VStack(alignment: .leading, spacing: 0) {
-            Text(label).fontWeight(.bold)
-            Picker("", selection: selected) {
-                ForEach(values, id: \.self) { Text($0) }
-            }
-            .pickerStyle(.segmented)
-        }
-    }
-
     private func round(_ n: Double) -> Int { Int(n.rounded()) }
 
     private var startDate: Date {
         let today = Date().withoutTime
-        return timeSpan == "24 Hours" ? today.yesterday :
-            timeSpan == "1 Week" ? today.daysBefore(7) :
-            timeSpan == "1 Month" ? today.monthsBefore(1) :
-            timeSpan == "3 Months" ? today.monthsBefore(3) :
+        return timeSpan == .day ? today.yesterday :
+            timeSpan == .week ? today.daysBefore(7) :
+            timeSpan == .month ? today.monthsBefore(1) :
+            timeSpan == .quarter ? today.monthsBefore(3) :
             // For .headphoneAudioExposure I could get data for 25 days,
             // but asking for any more crashes the app with the error
             // "Unable to invalidate interval: no data source available".
@@ -474,24 +464,26 @@ struct Statistics: View {
     }
 
     private var timeSpanPicker: some View {
-        picker(
-            label: "Time Span",
-            values: ["24 Hours", "1 Week", "1 Month", "3 Months"],
-            selected: $timeSpan
-        )
+        VStack(alignment: .leading, spacing: 0) {
+            Text("Time Span").fontWeight(.bold)
+            Picker("", selection: $timeSpan) {
+                ForEach(TimeSpan.allCases, id: \.self) {
+                    Text($0.rawValue).tag($0)
+                }
+            }
+            .pickerStyle(.segmented)
+        }
         .onChange(of: timeSpan) { _ in
             switch timeSpan {
-            case "24 Hours":
+            case .day:
                 frequency = .hour
-            case "1 Week":
+            case .week:
                 // frequency = .day
                 frequency = .hour
-            case "1 Month":
+            case .month:
                 frequency = .day
-            case "3 Months":
+            case .quarter:
                 frequency = .week
-            default:
-                break
             }
 
             loadData()
