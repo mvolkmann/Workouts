@@ -12,12 +12,12 @@ struct Statistics: View {
     @State private var chartType: ChartType = .line
     @State private var data: [DatedValue] = []
     @State private var dateToValueMap: [String: Double] = [:]
-    @State private var frequency: Frequency = .hour
     @State private var metric = Metrics.shared.map[.heartRate]!
     @State private var runningMiles = 0.0
     @State private var selectedDate = ""
     @State private var selectedValue = 0.0
     @State private var statsKind = "year"
+    // @State private var statsKind = "chart"
     @State private var timeSpan: TimeSpan = .week
 
     @StateObject private var vm = HealthKitViewModel.shared
@@ -109,13 +109,6 @@ struct Statistics: View {
                         y: .value("Value", value)
                     )
                     .interpolationMethod(.catmullRom)
-
-                    /*
-                     PointMark(
-                         x: .value("Date", datedValue.date),
-                         y: .value("Value", value)
-                     )
-                     */
 
                     // if !canScaleYAxis(metric: metric) {
                     AreaMark(
@@ -289,6 +282,18 @@ struct Statistics: View {
     }
 
     private func loadData() {
+        let detail = ChartDetail.shared
+
+        chartType = detail.type(
+            metric: metric.identifier,
+            timeSpan: timeSpan
+        ) ?? .bar
+
+        let frequency = detail.frequency(
+            metric: metric.identifier,
+            timeSpan: timeSpan
+        )
+
         Task {
             do {
                 let newData = try await HealthStore().getData(
@@ -473,21 +478,7 @@ struct Statistics: View {
             }
             .pickerStyle(.segmented)
         }
-        .onChange(of: timeSpan) { _ in
-            switch timeSpan {
-            case .day:
-                frequency = .hour
-            case .week:
-                // frequency = .day
-                frequency = .hour
-            case .month:
-                frequency = .day
-            case .quarter:
-                frequency = .week
-            }
-
-            loadData()
-        }
+        .onChange(of: timeSpan) { _ in loadData() }
     }
 
     private var title: String {

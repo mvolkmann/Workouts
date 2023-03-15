@@ -9,6 +9,7 @@ struct ContentView: View {
     @State private var isInfoPresented = false
     @State private var isSettingsPresented = false
     @State private var selection = "Workout"
+    // @State private var selection = "Statistics"
 
     init() {
         customizeNavBar()
